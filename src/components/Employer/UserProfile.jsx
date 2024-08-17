@@ -115,9 +115,9 @@ const UserProfile = () => {
           variant="contained" 
           onClick={() => navigate(-1)} 
           sx={{ mt: 3 }}
-          aria-label="Go back to previous page"
+          aria-label="Go back to page"
         >
-          Back
+          Close
         </Button>
       </Paper>
     </Container>

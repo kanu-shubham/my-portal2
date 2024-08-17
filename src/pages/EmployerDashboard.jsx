@@ -1,57 +1,115 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useAuth } from '../hooks/useAuth';
-import { Container, Typography, Grid } from '@mui/material';
+import { Container, Typography, Grid, Paper, Box, Button, Modal,  useMediaQuery, useTheme } from '@mui/material';
+import AddIcon from '@mui/icons-material/Add';
 import CreateJobPosting from '../components/Employer/CreateJobPosting';
 import ViewJobPostings from '../components/Employer/ViewJobPostings';
+import UserProfile from '../components/Employer/UserProfile';
+
 
 const EmployerDashboard = () => {
   const { user } = useAuth();
-  const [postedJobs, setPostedJobs] = useState([]);
   const [selectedApplicant, setSelectedApplicant] = useState(null);
+  const [isCreateJobModalOpen, setIsCreateJobModalOpen] = useState(false);
+  const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
-  useEffect(() => {
-    // Fetch posted jobs
-    // This is a mock implementation. Replace with actual API call.
-    setPostedJobs([
-      { id: 1, title: 'Frontend Developer', applicants: 5 },
-      { id: 2, title: 'Backend Engineer', applicants: 3 },
-    ]);
-  }, []);
-
-  const handleJobCreated = (newJob) => {
-    setPostedJobs([...postedJobs, { ...newJob, id: Date.now(), applicants: 0 }]);
+  const handleCreateJobClick = () => {
+    setIsCreateJobModalOpen(true);
   };
 
-  const handleViewApplicant = (applicantId) => {
-    // Fetch applicant data
-    // This is a mock implementation. Replace with actual API call.
+  const handleCloseCreateJobModal = () => {
+    setIsCreateJobModalOpen(false);
+  };
+
+  const handleJobCreated = (newJob) => {
+    setIsCreateJobModalOpen(false);
+  };
+
+  const handleApplicantClick = (applicant) => {
     setSelectedApplicant({
-      id: applicantId,
+      id: 1,
       name: 'John Doe',
       email: 'john@example.com',
       skills: ['React', 'Node.js', 'Python'],
+      experience: '5 years of software development',
+      education: 'BS in Computer Science'
     });
+    setIsProfileModalOpen(true);
+  };
+
+  const handleCloseProfileModal = () => {
+    setIsProfileModalOpen(false);
+    setSelectedApplicant(null);
   };
 
   return (
-    <Container component="main" maxWidth="lg">
-      <Typography component="h1" variant="h4" mt={4} mb={2}>
-        Employer Dashboard
-      </Typography>
-      
-      <Grid container spacing={4}>
-        <Grid item xs={12} md={6}>
-          <CreateJobPosting onJobCreated={handleJobCreated} />
-        </Grid>
-        
-        <Grid item xs={12} md={6}>
-          <ViewJobPostings 
-            postedJobs={postedJobs} 
-            onViewApplicant={handleViewApplicant} 
-          />
+    <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
+      <Grid container spacing={3}>
+        <Grid item xs={12}>
+          <Paper sx={{ p: 2, display: 'flex', flexDirection: 'column' }}>
+            <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
+              <Typography component="h1" variant="h4" color="primary">
+                Employer Dashboard
+              </Typography>
+              <Button
+                variant="contained"
+                color="primary"
+                startIcon={<AddIcon />}
+                onClick={handleCreateJobClick}
+              >
+                Create New Job
+              </Button>
+            </Box>
+           
+            <ViewJobPostings handleAppClick={handleApplicantClick}/>
+          </Paper>
         </Grid>
       </Grid>
-    </Container>
+
+      <Modal
+        open={isProfileModalOpen}
+        onClose={handleCloseProfileModal}
+        aria-labelledby="user-profile-modal"
+      >
+        <Box  sx={{
+          position: 'absolute',
+          top: '50%',
+          left: '50%',
+          transform: 'translate(-50%, -50%)',
+          width: isMobile ? '90%' : '600px',
+          maxHeight: '90vh',
+          bgcolor: 'background.paper',
+          boxShadow: 24,
+          p: 4,
+          overflow: 'auto',
+        }}>
+          {selectedApplicant && <UserProfile user={selectedApplicant} />}
+        </Box>
+      </Modal>
+
+      <Modal
+        open={isCreateJobModalOpen}
+        onClose={handleCloseCreateJobModal}
+        aria-labelledby="create-job-modal"
+      >
+        <Box sx={{
+          position: 'absolute',
+          top: '50%',
+          left: '50%',
+          transform: 'translate(-50%, -50%)',
+          width: isMobile ? '90%' : '600px',
+          maxHeight: '90vh',
+          bgcolor: 'background.paper',
+          boxShadow: 24,
+          p: 4,
+          overflow: 'auto',
+        }}>
+          <CreateJobPosting onJobCreated={handleJobCreated} onCancel={handleCloseCreateJobModal} />
+        </Box>
+      </Modal>
+      </Container>
   );
 };
 

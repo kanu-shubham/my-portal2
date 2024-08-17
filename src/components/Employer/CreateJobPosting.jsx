@@ -129,7 +129,7 @@ const CreateJobPosting = ({ onJobCreated }) => {
             </FormHelperText>
           )}
         </FormControl>
-        
+
         <FormControl fullWidth margin="normal">
           <FormLabel htmlFor="tags">Job Tags</FormLabel>
           <Autocomplete

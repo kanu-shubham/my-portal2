@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Drawer, List, ListItem, ListItemText, Typography, IconButton, Box } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 
-const ApplicantsList = ({ open, jobId, onClose }) => {
+const ApplicantsList = ({ open, jobId, onClose, onSelect }) => {
   const [applicants, setApplicants] = useState([]);
   const closeButtonRef = useRef(null);
 
@@ -52,7 +52,7 @@ const ApplicantsList = ({ open, jobId, onClose }) => {
         </Box>
         <List>
           {applicants.map((applicant) => (
-            <ListItem key={applicant.id} button>
+            <ListItem key={applicant.id} button onClick={()=>onSelect(applicant.id)}>
               <ListItemText 
                 primary={applicant.name} 
                 secondary={applicant.email}

@@ -3,7 +3,7 @@ import { Container, Typography, Box, CircularProgress } from '@mui/material';
 import JobCard from './JobCard';
 import ApplicantsList from './ApplicantsList';
 
-const JobListing = () => {
+const JobListing = ({handleAppClick}) => {
   const [jobs, setJobs] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true);
@@ -67,6 +67,11 @@ const JobListing = () => {
     setIsDrawerOpen(true);
   };
 
+  const onSelectApplicant = (applicant) => {
+    handleAppClick(applicant);
+    setIsDrawerOpen(false);
+  };
+
   return (
     <Container>
       <Typography variant="h4" component="h1" gutterBottom id="job-listings-title">
@@ -98,6 +103,7 @@ const JobListing = () => {
       )}
       <ApplicantsList 
         open={isDrawerOpen}
+        onSelect={onSelectApplicant}
         jobId={selectedJobId}
         onClose={() => setIsDrawerOpen(false)}
       />
