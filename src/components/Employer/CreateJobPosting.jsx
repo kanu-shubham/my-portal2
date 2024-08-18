@@ -11,36 +11,35 @@ import {
   FormLabel,
   FormHelperText,
   Chip,
-  Autocomplete
+  Autocomplete,
+  CircularProgress
 } from '@mui/material';
 
 const CreateJobPosting = ({ onJobCreated, onClose }) => {
   const { control, handleSubmit, reset, formState: { errors } } = useForm();
-  const [jobData, setJobData] = useState(null);
-  const { isLoading, isError, error, isSuccess, data } = useCreateJob(jobData);
   const [tags, setTags] = useState([]);
-
+  const [jobData, setJobData] = useState(null);
+  const createJobMutation = useCreateJob();
   const onSubmit = (data) => {
     const jobData = { ...data, tags };
-    setJobData(jobData);
-    onJobCreated(jobData);
+    createJobMutation.mutate(jobData, {
+      onSuccess: (createdJob) => {
+        onJobCreated(createdJob);
+        setJobData(jobData);
+        reset();
+        setTags([]);
+        setTimeout(() => {
+          onClose();
+        }, 2000);
+      },
+      onError: (error) => {
+      },
+    });
   };
 
   const handleTagsChange = (event, newTags) => {
     setTags(newTags);
   };
-
-  useEffect(() => {
-    if (isSuccess) {
-      reset();
-      setTags([]);
-      setTimeout(() => {
-        onClose();
-      }, 2000);
-    }
-    if (isError) {
-    }
-  }, [isSuccess, isError, error, reset, onClose]);
 
   return (
     <Paper elevation={3} sx={{ p: 3 }}>
@@ -63,6 +62,7 @@ const CreateJobPosting = ({ onJobCreated, onClose }) => {
                 id="jobTitle"
                 fullWidth
                 error={!!errors.jobTitle}
+                disabled={createJobMutation.isLoading}
                 aria-describedby="jobTitle-error"
                 inputProps={{
                   'aria-required': 'true',
@@ -99,6 +99,7 @@ const CreateJobPosting = ({ onJobCreated, onClose }) => {
                 rows={4}
                 fullWidth
                 error={!!errors.jobDescription}
+                disabled={createJobMutation.isLoading}
                 aria-describedby="jobDescription-error"
                 inputProps={{
                   'aria-required': 'true',
@@ -129,6 +130,7 @@ const CreateJobPosting = ({ onJobCreated, onClose }) => {
                 rows={4}
                 fullWidth
                 error={!!errors.jobRequirements}
+                disabled={createJobMutation.isLoading}
                 aria-describedby="jobRequirements-error"
                 inputProps={{
                   'aria-required': 'true',
@@ -163,6 +165,7 @@ const CreateJobPosting = ({ onJobCreated, onClose }) => {
                 {...params}
                 variant="outlined"
                 placeholder="Enter tags and press Enter"
+                disabled={createJobMutation.isLoading}
                 helperText="Enter relevant tags for the job (e.g., 'React', 'JavaScript', 'Remote')"
                 inputProps={{
                   ...params.inputProps,
@@ -190,6 +193,7 @@ const CreateJobPosting = ({ onJobCreated, onClose }) => {
                 fullWidth
                 error={!!errors.companyName}
                 aria-describedby="companyName-error"
+                disabled={createJobMutation.isLoading}
                 inputProps={{
                   'aria-required': 'true',
                   'aria-invalid': !!errors.companyName
@@ -217,6 +221,7 @@ const CreateJobPosting = ({ onJobCreated, onClose }) => {
                 id="contactInfo"
                 fullWidth
                 error={!!errors.contactInfo}
+                disabled={createJobMutation.isLoading}
                 aria-describedby="contactInfo-error"
                 inputProps={{
                   'aria-required': 'true',
@@ -237,15 +242,21 @@ const CreateJobPosting = ({ onJobCreated, onClose }) => {
             type="submit"
             variant="contained"
             color="primary"
+            disabled={createJobMutation.isLoading}
             fullWidth
             aria-describedby="submit-job-posting"
           >
-             {isLoading ? 'Posting...' : 'Post Job'}
+              {createJobMutation.isLoading ? (
+              <CircularProgress size={24} color="inherit" />
+            ) : (
+              'Post Job'
+            )}
           </Button>
           <Button
             type="button"
             variant="outlined"
             color="secondary"
+            disabled={createJobMutation.isLoading}
             onClick={onClose}
             fullWidth
             aria-describedby="close-job-posting"

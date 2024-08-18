@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { useParams } from 'react-router-dom';
 import { 
   Container, 
@@ -12,40 +12,26 @@ import {
   Button,
   CircularProgress
 } from '@mui/material';
+import useUserProfile from '../../hooks/data/useUserProfile';
 
-const UserProfile = ({onClose}) => {
+const UserProfile = ({ onClose }) => {
   const { id } = useParams();
-  const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const fetchUserProfile = async () => {
-      setLoading(true);
-     
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      const mockUser = {
-        id,
-        name: `Applicant ${id}`,
-        email: `applicant${id}@example.com`,
-        skills: ['JavaScript', 'React', 'Node.js', 'Python'],
-        projects: [
-          { name: 'E-commerce Platform', description: 'Built a full-stack e-commerce platform' },
-          { name: 'Task Management App', description: 'Developed a React-based task management application' }
-        ],
-        experience: '5 years of software development experience',
-        education: 'Bachelor of Science in Computer Science'
-      };
-      setUser(mockUser);
-      setLoading(false);
-    };
-
-    fetchUserProfile();
-  }, [id]);
+  const { user, loading, error } = useUserProfile(id);
 
   if (loading) {
     return (
       <Container sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
         <CircularProgress aria-label="Loading user profile" />
+      </Container>
+    );
+  }
+
+  if (error) {
+    return (
+      <Container>
+        <Typography variant="h4" component="h1" gutterBottom>
+          Error: {error}
+        </Typography>
       </Container>
     );
   }
@@ -62,59 +48,67 @@ const UserProfile = ({onClose}) => {
 
   return (
     <Container component="main" maxWidth="md" sx={{ mt: 4, mb: 4 }}>
-      <Paper elevation={3} sx={{ p: 3 }}>
-        <Typography variant="h4" component="h1" gutterBottom>
-          {user.name}
+      <Paper elevation={3} sx={{ p: 3 }} component="article" aria-labelledby="user-profile-title">
+        <Typography variant="h4" component="h1" gutterBottom id="user-profile-title">
+          {user.name}'s Profile
         </Typography>
-        <Typography variant="body1" gutterBottom aria-label="User email">
-          {user.email}
-        </Typography>
-
-        <Typography variant="h5" component="h2" gutterBottom sx={{ mt: 3 }}>
-          Skills
-        </Typography>
-        <Grid container spacing={1} aria-label="User skills">
-          {user.skills.map((skill, index) => (
-            <Grid item key={index}>
-              <Chip label={skill} />
-            </Grid>
-          ))}
-        </Grid>
-
-        <Typography variant="h5" component="h2" gutterBottom sx={{ mt: 3 }}>
-          Projects
-        </Typography>
-        <List aria-label="User projects">
-          {user.projects.map((project, index) => (
-            <ListItem key={index}>
-              <ListItemText 
-                primary={project.name} 
-                secondary={project.description}
-                primaryTypographyProps={{ variant: 'h6' }}
-              />
-            </ListItem>
-          ))}
-        </List>
-
-        <Typography variant="h5" component="h2" gutterBottom sx={{ mt: 3 }}>
-          Experience
-        </Typography>
-        <Typography variant="body1" paragraph>
-          {user.experience}
+        <Typography variant="body1" gutterBottom>
+          Email: <span aria-label="User email">{user.email}</span>
         </Typography>
 
-        <Typography variant="h5" component="h2" gutterBottom sx={{ mt: 3 }}>
-          Education
-        </Typography>
-        <Typography variant="body1" paragraph>
-          {user.education}
-        </Typography>
+        <section aria-labelledby="skills-section">
+          <Typography variant="h5" component="h2" gutterBottom sx={{ mt: 3 }} id="skills-section">
+            Skills
+          </Typography>
+          <Grid container spacing={1} role="list" aria-label="User skills">
+            {user.skills.map((skill, index) => (
+              <Grid item key={index} role="listitem">
+                <Chip label={skill} />
+              </Grid>
+            ))}
+          </Grid>
+        </section>
+
+        <section aria-labelledby="projects-section">
+          <Typography variant="h5" component="h2" gutterBottom sx={{ mt: 3 }} id="projects-section">
+            Projects
+          </Typography>
+          <List aria-label="User projects">
+            {user.projects.map((project, index) => (
+              <ListItem key={index} component="article" aria-labelledby={`project-${index}`}>
+                <ListItemText 
+                  primary={project.name} 
+                  secondary={project.description}
+                  primaryTypographyProps={{ variant: 'h6', id: `project-${index}` }}
+                />
+              </ListItem>
+            ))}
+          </List>
+        </section>
+
+        <section aria-labelledby="experience-section">
+          <Typography variant="h5" component="h2" gutterBottom sx={{ mt: 3 }} id="experience-section">
+            Experience
+          </Typography>
+          <Typography variant="body1" paragraph>
+            {user.experience}
+          </Typography>
+        </section>
+
+        <section aria-labelledby="education-section">
+          <Typography variant="h5" component="h2" gutterBottom sx={{ mt: 3 }} id="education-section">
+            Education
+          </Typography>
+          <Typography variant="body1" paragraph>
+            {user.education}
+          </Typography>
+        </section>
 
         <Button 
           variant="contained" 
           onClick={onClose} 
           sx={{ mt: 3 }}
-          aria-label="Go back to page"
+          aria-label="Close user profile"
         >
           Close
         </Button>
