@@ -51,25 +51,31 @@ const ViewJobPostings = ({ handleAppClick }) => {
         ref={loadingAnnouncement} 
         className="visually-hidden"
       ></div>
-      <ul 
-        aria-labelledby="job-listings-title" 
-        className="job-list"
-      >
-        {jobs.map((job, index) => (
-          <li key={job.id} ref={index === jobs.length - 1 ? lastJobElementRef : null}>
-            <JobCard 
-              job={job} 
-              onApplicantClick={handleApplicantClick}
-            />
-          </li>
-        ))}
-      </ul>
+      {jobs.length > 0 ? (
+        <ul 
+          aria-labelledby="job-listings-title" 
+          className="job-list"
+        >
+          {jobs.map((job, index) => (
+            <li key={job.id} ref={index === jobs.length - 1 ? lastJobElementRef : null}>
+              <JobCard 
+                job={job} 
+                onApplicantClick={handleApplicantClick}
+              />
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <Typography variant="body1" textAlign="center" my={2}>
+          No jobs available at the moment.
+        </Typography>
+      )}
       {isLoading && (
         <Box display="flex" justifyContent="center" my={2}>
-          <CircularProgress aria-label="Loading more jobs" />
+          <CircularProgress aria-label="Loading jobs" />
         </Box>
       )}
-      {!hasMore && (
+      {!hasMore && jobs.length > 0 && (
         <Typography 
           variant="body1" 
           textAlign="center" 

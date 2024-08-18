@@ -1,4 +1,4 @@
-import { useState, useCallback, useRef } from 'react';
+import { useState, useCallback, useRef, useEffect } from 'react';
 
 const useJobListings = () => {
   const [jobs, setJobs] = useState([]);
@@ -39,6 +39,11 @@ const useJobListings = () => {
       setIsLoading(false);
     }
   }, [jobs.length, page, isLoading, hasMore]);
+
+  // Add this useEffect to trigger initial fetch
+  useEffect(() => {
+    fetchJobs();
+  }, [fetchJobs]);
 
   return { jobs, isLoading, hasMore, fetchJobs, loadingAnnouncement };
 };
