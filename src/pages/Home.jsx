@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { 
     Container, 
     Typography, 
@@ -23,8 +22,6 @@ const Home = () => {
       console.log('Searching for:', jobTitle, 'in', location);
       // Implement actual search functionality here
     };
-  
-    const navigate = useNavigate();
 
     const featuredCompanies = [
       { name: 'TechCorp', logo: '/path-to-logo1.png' },
@@ -43,10 +40,6 @@ const Home = () => {
       'Sales',
       'Human Resources',
     ];
-
-    const handleSignUp = () => {
-      navigate('/signup');
-    };
 
     return (
       <Box sx={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>

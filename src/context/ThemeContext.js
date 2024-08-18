@@ -1,9 +1,13 @@
-import React, { createContext, useState, useMemo } from 'react';
-import { ThemeProvider, createTheme } from '@mui/material/styles';
+import React, { createContext, useState, useContext, useMemo } from 'react';
+import { ThemeProvider as MuiThemeProvider } from '@mui/material/styles';
+import { lightTheme, darkTheme } from '../styles/theme';
 
-export const ColorModeContext = createContext({ toggleColorMode: () => {} });
+const ThemeContext = createContext({
+  toggleColorMode: () => {},
+  mode: 'light',
+});
 
-export const ColorModeProvider = ({ children }) => {
+export const ThemeProvider = ({ children }) => {
   const [mode, setMode] = useState('light');
 
   const colorMode = useMemo(
@@ -11,25 +15,18 @@ export const ColorModeProvider = ({ children }) => {
       toggleColorMode: () => {
         setMode((prevMode) => (prevMode === 'light' ? 'dark' : 'light'));
       },
+      mode,
     }),
-    []
-  );
-
-  const theme = useMemo(
-    () =>
-      createTheme({
-        palette: {
-          mode,
-        },
-      }),
     [mode]
   );
 
+  const theme = useMemo(() => (mode === 'light' ? lightTheme : darkTheme), [mode]);
+
   return (
-    <ColorModeContext.Provider value={colorMode}>
-      <ThemeProvider theme={theme}>{children}</ThemeProvider>
-    </ColorModeContext.Provider>
+    <ThemeContext.Provider value={colorMode}>
+      <MuiThemeProvider theme={theme}>{children}</MuiThemeProvider>
+    </ThemeContext.Provider>
   );
 };
 
-export const useColorMode = () => React.useContext(ColorModeContext);
+export const useTheme = () => useContext(ThemeContext);

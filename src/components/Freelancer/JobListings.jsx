@@ -1,82 +1,97 @@
-import React, { useState, useEffect } from 'react';
-import { TextField, Button, List, ListItem, ListItemText, Chip, Autocomplete } from '@mui/material';
+import React, { useRef, useCallback } from 'react';
+import { TextField, Button, Card, CardContent, Typography, Box, Chip, CircularProgress } from '@mui/material';
+import { useForm, Controller } from 'react-hook-form';
+import { useJobs } from '../../hooks/data/useJobs';
 
-// Mock data generation function (you can move this to a separate utility file)
-const generateMockJobs = (count) => {
-  // ... (same as before)
-};
+const JobListing = () => {
+  const { jobs, loading, hasMore, fetchJobs, applyFilters } = useJobs();
+  const { control, handleSubmit } = useForm();
+  const observer = useRef();
 
-const JobListings = () => {
-  const [jobs, setJobs] = useState([]);
-  const [filteredJobs, setFilteredJobs] = useState([]);
-  const [skillFilter, setSkillFilter] = useState([]);
-  const [minSalary, setMinSalary] = useState('');
+  const lastJobElementRef = useCallback(node => {
+    if (loading) return;
+    if (observer.current) observer.current.disconnect();
+    observer.current = new IntersectionObserver(entries => {
+      if (entries[0].isIntersecting && hasMore) {
+        fetchJobs();
+      }
+    });
+    if (node) observer.current.observe(node);
+  }, [loading, hasMore, fetchJobs]);
 
-  useEffect(() => {
-    const mockJobs = generateMockJobs(10000);
-    setJobs(mockJobs);
-    setFilteredJobs(mockJobs.slice(0, 100));
-  }, []);
-
-  useEffect(() => {
-    const filtered = jobs.filter(job => 
-      (skillFilter.length === 0 || skillFilter.every(skill => job.skills.includes(skill))) &&
-      (minSalary === '' || job.salaryPerHour >= parseInt(minSalary))
-    );
-    setFilteredJobs(filtered.slice(0, 100));
-  }, [skillFilter, minSalary, jobs]);
+  const onSubmit = (data) => {
+    applyFilters(data);
+  };
 
   const handleQuickApply = (jobId) => {
-    console.log(`Quick applied to job ${jobId}`);
-    // Here you would typically send an API request to apply for the job
+    // In a real app, you'd send an API request to apply for the job
+    console.log(`Applied to job ${jobId}`);
   };
 
   return (
-    <>
-      <Autocomplete
-        multiple
-        id="job-skills-filter"
-        options={['JavaScript', 'React', 'Node.js', 'Python', 'Java', 'C++']}
-        value={skillFilter}
-        onChange={(event, newValue) => setSkillFilter(newValue)}
-        renderInput={(params) => (
-          <TextField {...params} label="Filter by Skills" margin="normal" />
-        )}
-      />
-      <TextField
-        fullWidth
-        margin="normal"
-        label="Minimum Salary per Hour"
-        type="number"
-        value={minSalary}
-        onChange={(e) => setMinSalary(e.target.value)}
-      />
-      <List>
-        {filteredJobs.map((job) => (
-          <ListItem key={job.id} alignItems="flex-start">
-            <ListItemText
-              primary={job.title}
-              secondary={
-                <>
-                  <span>{job.company}</span>
-                  {` — ${job.description}`}
-                  <br />
-                  {job.skills.map((skill) => (
-                    <Chip key={skill} label={skill} size="small" sx={{ mr: 0.5 }} />
-                  ))}
-                  <br />
-                  {`Salary: $${job.salaryPerHour}/hour`}
-                </>
-              }
+    <Box>
+      <form onSubmit={handleSubmit(onSubmit)} aria-label="Job Filter Form">
+        <Controller
+          name="skills"
+          control={control}
+          defaultValue=""
+          render={({ field }) => (
+            <TextField
+              {...field}
+              label="Filter by Skills"
+              fullWidth
+              margin="normal"
+              helperText="Enter skills separated by commas"
             />
-            <Button variant="contained" color="primary" onClick={() => handleQuickApply(job.id)}>
-              Quick Apply
-            </Button>
-          </ListItem>
+          )}
+        />
+        <Controller
+          name="minSalary"
+          control={control}
+          defaultValue=""
+          render={({ field }) => (
+            <TextField
+              {...field}
+              label="Minimum Salary per Hour"
+              type="number"
+              fullWidth
+              margin="normal"
+            />
+          )}
+        />
+        <Button type="submit" variant="contained" color="primary" sx={{ mt: 2, mb: 2 }}>
+          Filter Jobs
+        </Button>
+      </form>
+
+      <Box role="list" aria-label="Job Listings">
+        {jobs.map((job, index) => (
+          <Card key={job.id} sx={{ mb: 2 }} ref={jobs.length === index + 1 ? lastJobElementRef : null}>
+            <CardContent>
+              <Typography variant="h6">{job.title}</Typography>
+              <Typography variant="subtitle1">{job.company}</Typography>
+              <Typography variant="body1">Salary: ${job.salary}/hour</Typography>
+              <Box mt={1} mb={1}>
+                {job.skills.map((skill, index) => (
+                  <Chip key={index} label={skill} sx={{ mr: 1 }} />
+                ))}
+              </Box>
+              <Button 
+                variant="contained" 
+                color="secondary" 
+                onClick={() => handleQuickApply(job.id)}
+                aria-label={`Quick Apply for ${job.title} at ${job.company}`}
+              >
+                Quick Apply
+              </Button>
+            </CardContent>
+          </Card>
         ))}
-      </List>
-    </>
+      </Box>
+      {loading && <CircularProgress aria-label="Loading more jobs" />}
+      {!hasMore && <Typography aria-live="polite">No more jobs to load</Typography>}
+    </Box>
   );
 };
 
-export default JobListings;
+export default JobListing;

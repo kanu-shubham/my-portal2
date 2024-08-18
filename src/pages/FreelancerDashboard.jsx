@@ -1,37 +1,34 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Container, Grid, Paper, Typography } from '@mui/material';
 import UserProfile from '../components/Freelancer/UserProfile';
-import RecentActivity from '../components/Freelancer/RecentActivity';
 import JobListings from '../components/Freelancer/JobListings';
-import { useAuth } from '../hooks/useAuth'; // Adjust the import path as needed
 
 const FreelancerDashboard = () => {
-  const { user } = useAuth();
+  const [user, setUser] = useState(null);
+
+  const handleProfileUpdate = (updatedUser) => {
+    setUser(updatedUser);
+    // In a real app, you'd send this data to your backend
+    console.log('Updated user profile:', updatedUser);
+  };
 
   return (
     <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
       <Grid container spacing={3}>
-        {/* User Profile with GitHub Repos */}
         <Grid item xs={12} md={4}>
           <Paper sx={{ p: 2 }}>
-            <Typography variant="h6" gutterBottom>User Profile</Typography>
-            <UserProfile user={user} />
+            <Typography variant="h5" component="h2" gutterBottom>
+              Your Profile
+            </Typography>
+            <UserProfile user={user} onUpdate={handleProfileUpdate} />
           </Paper>
         </Grid>
-
-        {/* Job Listings */}
         <Grid item xs={12} md={8}>
           <Paper sx={{ p: 2 }}>
-            <Typography variant="h6" gutterBottom>Job Listings</Typography>
+            <Typography variant="h5" component="h2" gutterBottom>
+              Available Jobs
+            </Typography>
             <JobListings />
-          </Paper>
-        </Grid>
-
-        {/* Recent Activity */}
-        <Grid item xs={12}>
-          <Paper sx={{ p: 2 }}>
-            <Typography variant="h6" gutterBottom>Recent Activity</Typography>
-            <RecentActivity />
           </Paper>
         </Grid>
       </Grid>
