@@ -1,0 +1,47 @@
+.github-repos {
+    margin-top: 20px;
+  }
+  
+  .github-repos-title {
+    font-weight: bold;
+    margin-bottom: 10px;
+  }
+  
+  .github-repos-list {
+    list-style-type: none;
+    padding: 0;
+  }
+  
+  .github-repos-item {
+    margin-bottom: 15px;
+  }
+  
+  .github-repos-link {
+    color: #0366d6;
+    text-decoration: none;
+    font-weight: 500;
+  }
+  
+  .github-repos-link:hover, .github-repos-link:focus {
+    text-decoration: underline;
+  }
+  
+  .github-repos-description {
+    margin-top: 5px;
+    color: #586069;
+  }
+  
+  .github-repos-loading {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+  }
+  
+  .github-repos-error {
+    margin-top: 20px;
+  }
+  
+  .github-repos-empty {
+    margin-top: 20px;
+    font-style: italic;
+  }

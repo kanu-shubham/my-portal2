@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { useForm, Controller } from 'react-hook-form';
-import { TextField, Button, Chip, Box, Typography, CircularProgress, Alert } from '@mui/material';
+import { TextField, Button, Chip, Box } from '@mui/material';
 import { useGithubRepos } from '../../hooks/data/useGithubRepos';
+import GitHubRepos from './GitHubRepos';
 import './FreelancerProfile.css';
 
 const FreelancerProfile = ({ user, onUpdate }) => {
@@ -23,7 +24,6 @@ const FreelancerProfile = ({ user, onUpdate }) => {
 
   const handleGithubUsernameBlur = (event, onChange) => {
     const newUsername = event.target.value.trim();
-    console.log('Setting GitHub username:', newUsername);
     setGithubUsername(newUsername);
     onChange(newUsername);
   };
@@ -105,21 +105,13 @@ const FreelancerProfile = ({ user, onUpdate }) => {
           />
         )}
       />
-      {isLoading && <CircularProgress className="loading-spinner" aria-label="Loading GitHub repositories" />}
-      {isError && <Alert severity="error" className="error-message">{error.message}</Alert>}
-      {repos && repos.length > 0 && (
-        <Box className="github-repos">
-          <Typography variant="subtitle1">GitHub Repositories:</Typography>
-          <ul className="repo-list" aria-label="GitHub Repositories">
-            {repos.map(repo => (
-              <li key={repo.id} className="repo-item">{repo.name}</li>
-            ))}
-          </ul>
-        </Box>
-      )}
-      {repos && repos.length === 0 && githubUsername && !isLoading && !isError && (
-        <Typography variant="body2">No repositories found for this username.</Typography>
-      )}
+       <GitHubRepos
+        username={githubUsername}
+        repos={repos}
+        isLoading={isLoading}
+        isError={isError}
+        error={error}
+      />
       <Button 
         type="submit" 
         variant="contained" 

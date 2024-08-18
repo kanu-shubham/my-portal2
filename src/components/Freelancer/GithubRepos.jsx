@@ -1,47 +1,46 @@
 import React from 'react';
-import { List, ListItem, ListItemIcon, ListItemText, Typography, Link } from '@mui/material';
-import { GitHub as GitHubIcon } from '@mui/icons-material';
+import { Box, Typography, CircularProgress, Alert } from '@mui/material';
+import './GitHubRepos.css';
 
-const GitHubRepos = ({ username }) => {
-  const { isLoading, isError, data: repos, error } = useGithubRepos(username);
+const GitHubRepos = ({ username, repos, isLoading, isError, error }) => {
+  if (isLoading) {
+    return <CircularProgress className="github-repos-loading" aria-label="Loading GitHub repositories" />;
+  }
 
-  if (isLoading) return <Typography role="status" aria-live="polite">Loading repositories...</Typography>;
-  if (isError) return <Typography role="alert">Error: {error.message}</Typography>;
+  if (isError) {
+    return (
+      <Alert severity="error" className="github-repos-error">
+        Error loading repositories: {error.message}
+      </Alert>
+    );
+  }
 
   if (!repos || repos.length === 0) {
     return (
-      <Typography variant="body1" role="status" aria-live="polite">
+      <Typography variant="body2" className="github-repos-empty">
         No repositories found for {username}.
       </Typography>
     );
   }
 
   return (
-    <nav aria-label={`${username}'s GitHub repositories`}>
-      <List>
-        {repos.map((repo) => (
-          <ListItem key={repo.id} component="article">
-            <ListItemIcon>
-              <GitHubIcon aria-hidden="true" />
-            </ListItemIcon>
-            <ListItemText
-              primary={
-                <Link
-                  href={repo.html_url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label={`${repo.name} (opens in a new tab)`}
-                >
-                  {repo.name}
-                </Link>
-              }
-              secondary={repo.description}
-              secondaryTypographyProps={{ "aria-label": `Description: ${repo.description || "No description provided"}` }}
-            />
-          </ListItem>
+    <Box className="github-repos" aria-live="polite">
+      <Typography variant="subtitle1" className="github-repos-title">GitHub Repositories:</Typography>
+      <ul className="github-repos-list" aria-label={`GitHub Repositories for ${username}`}>
+        {repos.map(repo => (
+          <li key={repo.id} className="github-repos-item">
+            <a href={repo.html_url} target="_blank" rel="noopener noreferrer" className="github-repos-link">
+              {repo.name}
+            </a>
+            {repo.description && (
+              <Typography variant="body2" className="github-repos-description">
+                {repo.description}
+              </Typography>
+            )}
+          </li>
         ))}
-      </List>
-    </nav>
+      </ul>
+    </Box>
   );
 };
 
