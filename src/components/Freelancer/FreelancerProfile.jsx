@@ -17,8 +17,6 @@ const FreelancerProfile = ({ user, onUpdate }) => {
     }
   });
 
-  console.log(repos);
-
   const onSubmit = (data) => {
     onUpdate({ ...data, repos });
   };
