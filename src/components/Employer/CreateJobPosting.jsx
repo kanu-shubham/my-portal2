@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { useCreateJob } from '../../hooks/data/useCreateJob';
 import { 
@@ -18,14 +18,12 @@ import {
 const CreateJobPosting = ({ onJobCreated, onClose }) => {
   const { control, handleSubmit, reset, formState: { errors } } = useForm();
   const [tags, setTags] = useState([]);
-  const [jobData, setJobData] = useState(null);
   const createJobMutation = useCreateJob();
   const onSubmit = (data) => {
     const jobData = { ...data, tags };
     createJobMutation.mutate(jobData, {
       onSuccess: (createdJob) => {
         onJobCreated(createdJob);
-        setJobData(jobData);
         reset();
         setTags([]);
         setTimeout(() => {

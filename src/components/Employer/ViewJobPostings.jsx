@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { Container, Typography, Box, CircularProgress } from '@mui/material';
 import JobCard from './JobCard';
 import ApplicantsList from './ApplicantsList';
@@ -10,26 +10,24 @@ const ViewJobPostings = ({ handleAppClick }) => {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const observerTarget = useRef(null);
 
+  const lastJobElementRef = useCallback(node => {
+    if (isLoading) return;
+    if (observerTarget.current) observerTarget.current.disconnect();
+    observerTarget.current = new IntersectionObserver(entries => {
+      if (entries[0].isIntersecting && hasMore) {
+        fetchJobs();
+      }
+    }, { threshold: 1.0 });
+    if (node) observerTarget.current.observe(node);
+  }, [isLoading, hasMore, fetchJobs]);
+
   useEffect(() => {
-    const observer = new IntersectionObserver(
-      entries => {
-        if (entries[0].isIntersecting && hasMore) {
-          fetchJobs();
-        }
-      },
-      { threshold: 1.0 }
-    );
-
-    if (observerTarget.current) {
-      observer.observe(observerTarget.current);
-    }
-
     return () => {
       if (observerTarget.current) {
-        observer.unobserve(observerTarget.current);
+        observerTarget.current.disconnect();
       }
     };
-  }, [fetchJobs, hasMore]);
+  }, []);
 
   const handleApplicantClick = (jobId) => {
     setSelectedJobId(jobId);
@@ -57,8 +55,8 @@ const ViewJobPostings = ({ handleAppClick }) => {
         aria-labelledby="job-listings-title" 
         className="job-list"
       >
-        {jobs.map(job => (
-          <li key={job.id}>
+        {jobs.map((job, index) => (
+          <li key={job.id} ref={index === jobs.length - 1 ? lastJobElementRef : null}>
             <JobCard 
               job={job} 
               onApplicantClick={handleApplicantClick}
@@ -70,9 +68,6 @@ const ViewJobPostings = ({ handleAppClick }) => {
         <Box display="flex" justifyContent="center" my={2}>
           <CircularProgress aria-label="Loading more jobs" />
         </Box>
-      )}
-      {!isLoading && hasMore && (
-        <div ref={observerTarget} style={{ height: '20px' }} aria-hidden="true"></div>
       )}
       {!hasMore && (
         <Typography 
