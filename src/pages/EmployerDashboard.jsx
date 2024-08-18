@@ -105,7 +105,7 @@ const EmployerDashboard = () => {
           p: 4,
           overflow: 'auto',
         }}>
-          <CreateJobPosting onJobCreated={handleJobCreated} onCancel={handleCloseCreateJobModal} />
+          <CreateJobPosting onJobCreated={handleJobCreated} onCancel={handleCloseCreateJobModal} onClose={handleCloseCreateJobModal} />
         </Box>
       </Modal>
       </Container>

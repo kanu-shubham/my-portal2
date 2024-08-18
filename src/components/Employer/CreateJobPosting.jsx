@@ -13,7 +13,7 @@ import {
   Autocomplete
 } from '@mui/material';
 
-const CreateJobPosting = ({ onJobCreated }) => {
+const CreateJobPosting = ({ onJobCreated, onClose }) => {
   const { control, handleSubmit, reset, formState: { errors } } = useForm();
   const [tags, setTags] = useState([]);
 
@@ -218,20 +218,33 @@ const CreateJobPosting = ({ onJobCreated }) => {
           )}
         </FormControl>
 
-        <Box mt={3}>
+        <Box display="flex" justifyContent="space-between" gap={2}>
           <Button
             type="submit"
-            fullWidth
             variant="contained"
             color="primary"
+            fullWidth
             aria-describedby="submit-job-posting"
           >
             Post Job
           </Button>
-          <FormHelperText id="submit-job-posting">
-            Submit the job posting form
-          </FormHelperText>
+          <Button
+            type="button"
+            variant="outlined"
+            color="secondary"
+            onClick={onClose}
+            fullWidth
+            aria-describedby="close-job-posting"
+          >
+            Close
+          </Button>
         </Box>
+        <FormHelperText id="submit-job-posting">
+          Submit the job posting form
+        </FormHelperText>
+        <FormHelperText id="close-job-posting">
+          Close the job posting form without submitting
+        </FormHelperText>
       </form>
     </Paper>
   );
