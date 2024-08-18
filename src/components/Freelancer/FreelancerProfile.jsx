@@ -1,7 +1,8 @@
 import React from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { TextField, Button, Chip, Box, Typography, CircularProgress, Alert } from '@mui/material';
-import  {useGithubRepos}  from '../../hooks/data/useGithubRepos';
+import { useGithubRepos } from '../../hooks/data/useGithubRepos';
+import './FreelancerProfile.css';
 
 const FreelancerProfile = ({ user, onUpdate }) => {
   const { control, handleSubmit, watch } = useForm({
@@ -21,7 +22,7 @@ const FreelancerProfile = ({ user, onUpdate }) => {
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} aria-label="User Profile Form">
+    <form onSubmit={handleSubmit(onSubmit)} className="freelancer-profile-form" aria-label="User Profile Form">
       <Controller
         name="name"
         control={control}
@@ -78,9 +79,9 @@ const FreelancerProfile = ({ user, onUpdate }) => {
           />
         )}
       />
-      <Box mt={2} mb={2} role="region" aria-label="Selected Skills">
+      <Box className="skills-container" role="region" aria-label="Selected Skills">
         {watch('skills').map((skill, index) => (
-          <Chip key={index} label={skill} sx={{ mr: 1, mb: 1 }} />
+          <Chip key={index} label={skill} className="skill-chip" />
         ))}
       </Box>
       <Controller
@@ -95,19 +96,19 @@ const FreelancerProfile = ({ user, onUpdate }) => {
           />
         )}
       />
-      {loading && <CircularProgress aria-label="Loading GitHub repositories" />}
-      {error && <Alert severity="error">{error}</Alert>}
+      {loading && <CircularProgress className="loading-spinner" aria-label="Loading GitHub repositories" />}
+      {error && <Alert severity="error" className="error-message">{error}</Alert>}
       {repos.length > 0 && (
-        <Box mt={2}>
+        <Box className="github-repos">
           <Typography variant="subtitle1">GitHub Repositories:</Typography>
-          <ul aria-label="GitHub Repositories">
+          <ul className="repo-list" aria-label="GitHub Repositories">
             {repos.map(repo => (
-              <li key={repo.id}>{repo.name}</li>
+              <li key={repo.id} className="repo-item">{repo.name}</li>
             ))}
           </ul>
         </Box>
       )}
-      <Button type="submit" variant="contained" color="primary" sx={{ mt: 2 }}>
+      <Button type="submit" variant="contained" color="primary" className="submit-button">
         Update Profile
       </Button>
     </form>

@@ -1,0 +1,47 @@
+/* JobListings.css */
+
+.error-container {
+    margin-top: 32px;
+  }
+  
+  .job-listings-container {
+    margin-top: 32px;
+    height: calc(100vh - 100px);
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .page-title {
+    font-size: 2.5rem;
+    margin-bottom: 24px;
+  }
+  
+  .content-grid {
+    flex-grow: 1;
+    overflow: hidden;
+  }
+  
+  .filters-grid-item {
+    height: 100%;
+  }
+  
+  .listings-grid-item {
+    height: 100%;
+    overflow: hidden;
+  }
+  
+  .job-listings-box {
+    height: 100%;
+    overflow-y: auto;
+    padding-right: 16px;
+  }
+  
+  .loading-indicator {
+    display: flex;
+    justify-content: center;
+    margin-top: 32px;
+  }
+  
+  .no-more-jobs {
+    margin-top: 32px;
+  }

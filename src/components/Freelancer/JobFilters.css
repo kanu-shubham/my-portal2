@@ -1,0 +1,19 @@
+.job-filters-paper {
+    padding: 24px;
+    height: 100%;
+    overflow-y: auto;
+  }
+  
+  .filter-title {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-bottom: 24px;
+  }
+  
+  .filter-section {
+    margin-bottom: 24px;
+  }
+  
+  .clear-filters-button {
+    margin-top: 16px;
+  }

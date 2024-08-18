@@ -9,6 +9,7 @@ import {
   Box,
   Button
 } from '@mui/material';
+import './JobFilters.css'; // Import the CSS file
 
 const JobFilters = ({ filters, setFilters }) => {
   const handleSkillChange = (event, newValue) => {
@@ -28,12 +29,12 @@ const JobFilters = ({ filters, setFilters }) => {
   };
 
   return (
-    <Paper elevation={3} sx={{ p: 3, height: '100%', overflowY: 'auto' }}>
-      <Typography variant="h2" component="h2" gutterBottom sx={{ fontSize: '1.5rem', fontWeight: 'bold', mb: 3 }}>
+    <Paper elevation={3} className="job-filters-paper">
+      <Typography variant="h2" component="h2" gutterBottom className="filter-title">
         Filters
       </Typography>
       
-      <Box mb={3}>
+      <Box className="filter-section">
         <Typography id="skills-label" gutterBottom>Skills</Typography>
         <Autocomplete
           multiple
@@ -57,7 +58,7 @@ const JobFilters = ({ filters, setFilters }) => {
         />
       </Box>
       
-      <Box mb={3}>
+      <Box className="filter-section">
         <Typography id="salary-label" gutterBottom>Minimum Salary (per year)</Typography>
         <Slider
           value={filters.minSalary}
@@ -71,7 +72,7 @@ const JobFilters = ({ filters, setFilters }) => {
         />
       </Box>
       
-      <Box mb={3}>
+      <Box className="filter-section">
         <Typography id="location-label" gutterBottom>Location</Typography>
         <Autocomplete
           id="location-filter"
@@ -94,6 +95,7 @@ const JobFilters = ({ filters, setFilters }) => {
         onClick={clearFilters} 
         fullWidth
         aria-label="Clear all filters"
+        className="clear-filters-button"
       >
         Clear All Filters
       </Button>

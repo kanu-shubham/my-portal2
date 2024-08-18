@@ -3,6 +3,7 @@ import { List, ListItem, ListItemText, ListItemIcon, Typography, Paper, Circular
 import WorkIcon from '@mui/icons-material/Work';
 import PersonIcon from '@mui/icons-material/Person';
 import MailIcon from '@mui/icons-material/Mail';
+import './RecentActivity.css'; // Import the CSS file
 
 const RecentActivity = () => {
   const [activities, setActivities] = useState([]);
@@ -45,7 +46,7 @@ const RecentActivity = () => {
 
   if (loading) {
     return (
-      <Paper elevation={3} sx={{ p: 2, display: 'flex', justifyContent: 'center' }}>
+      <Paper elevation={3} className="loading-container">
         <CircularProgress />
       </Paper>
     );
@@ -53,14 +54,14 @@ const RecentActivity = () => {
 
   if (error) {
     return (
-      <Paper elevation={3} sx={{ p: 2 }}>
+      <Paper elevation={3} className="error-container">
         <Typography color="error">{error}</Typography>
       </Paper>
     );
   }
 
   return (
-    <Paper elevation={3} sx={{ p: 2 }}>
+    <Paper elevation={3} className="activity-container">
       <Typography variant="h6" gutterBottom>
         Recent Activity
       </Typography>

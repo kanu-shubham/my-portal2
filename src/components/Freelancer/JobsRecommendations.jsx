@@ -1,10 +1,11 @@
 import React from 'react';
 import { Typography, List, ListItem, ListItemText, Button, Divider, Box } from '@mui/material';
+import './JobRecommendations.css'; // Import the CSS file
 
 const JobRecommendations = ({ jobs, onViewJob, onViewAllJobs }) => {
   return (
-    <div>
-      <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
+    <div className="job-recommendations">
+      <Box className="header">
         <Typography variant="h6">
           Recommended Jobs
         </Typography>
@@ -12,6 +13,7 @@ const JobRecommendations = ({ jobs, onViewJob, onViewAllJobs }) => {
           variant="outlined" 
           color="primary" 
           onClick={onViewAllJobs}
+          className="view-all-button"
         >
           View All Jobs
         </Button>
@@ -31,7 +33,12 @@ const JobRecommendations = ({ jobs, onViewJob, onViewAllJobs }) => {
                   </>
                 }
               />
-              <Button variant="outlined" size="small" onClick={() => onViewJob(job.id)}>
+              <Button 
+                variant="outlined" 
+                size="small" 
+                onClick={() => onViewJob(job.id)}
+                className="view-job-button"
+              >
                 View Job
               </Button>
             </ListItem>

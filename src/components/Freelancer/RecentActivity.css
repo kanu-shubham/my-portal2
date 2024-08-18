@@ -1,0 +1,13 @@
+.loading-container {
+    padding: 16px;
+    display: flex;
+    justify-content: center;
+  }
+  
+  .error-container {
+    padding: 16px;
+  }
+  
+  .activity-container {
+    padding: 16px;
+  }

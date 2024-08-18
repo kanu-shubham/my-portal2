@@ -1,0 +1,49 @@
+
+
+.freelancer-profile-form {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+  
+  .form-field {
+    margin-bottom: 20px;
+  }
+  
+  .skills-container {
+    margin-top: 16px;
+    margin-bottom: 16px;
+  }
+  
+  .skill-chip {
+    margin-right: 8px;
+    margin-bottom: 8px;
+  }
+  
+  .github-repos {
+    margin-top: 16px;
+  }
+  
+  .repo-list {
+    list-style-type: none;
+    padding-left: 0;
+  }
+  
+  .repo-item {
+    margin-bottom: 8px;
+  }
+  
+  .submit-button {
+    margin-top: 16px;
+  }
+  
+  .loading-spinner {
+    display: flex;
+    justify-content: center;
+    margin: 20px 0;
+  }
+  
+  .error-message {
+    margin-top: 16px;
+    margin-bottom: 16px;
+  }
