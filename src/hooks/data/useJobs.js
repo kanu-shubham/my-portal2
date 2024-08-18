@@ -1,4 +1,4 @@
-// src/hooks/useJobs.js
+
 import { useInfiniteQuery } from '@tanstack/react-query';
 
 const JOBS_PER_PAGE = 20;
@@ -6,7 +6,7 @@ const JOBS_PER_PAGE = 20;
 // This function simulates an API call with pagination
 const fetchJobs = async ({ pageParam = 1, queryKey }) => {
   const [_, filters] = queryKey;
-  // Simulate API delay
+
   await new Promise(resolve => setTimeout(resolve, 1000));
   
   const startIndex = (pageParam - 1) * JOBS_PER_PAGE;
@@ -41,7 +41,7 @@ const fetchJobs = async ({ pageParam = 1, queryKey }) => {
   return {
     jobs: filteredJobs,
     nextPage: pageParam + 1,
-    hasMore: endIndex < 100, // Assume there are 100 total jobs for this example
+    hasMore: endIndex < 10000, // Assume there are 100 total jobs for this example
   };
 };
 

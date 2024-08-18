@@ -6,10 +6,6 @@ const useErrorHandler = () => {
   const handleError = useCallback((error) => {
     console.error('An error occurred:', error);
     setError(error);
-    // You can add additional error handling logic here, such as:
-    // - Sending error to a logging service
-    // - Displaying a notification to the user
-    // - Redirecting to an error page
   }, []);
 
   const clearError = useCallback(() => {

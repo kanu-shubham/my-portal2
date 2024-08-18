@@ -17,7 +17,6 @@ const JobListing = ({handleAppClick}) => {
     if (isLoading || !hasMore) return;
 
     setIsLoading(true);
-    // Simulate API call
     await new Promise(resolve => setTimeout(resolve, 1000));
     const newJobs = Array.from({ length: 10 }, (_, i) => ({
       id: jobs.length + i + 1,

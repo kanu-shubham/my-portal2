@@ -6,7 +6,6 @@ import CreateJobPosting from '../components/Employer/CreateJobPosting';
 import ViewJobPostings from '../components/Employer/ViewJobPostings';
 import UserProfile from '../components/Employer/UserProfile';
 
-
 const EmployerDashboard = () => {
   const { user } = useAuth();
   const [selectedApplicant, setSelectedApplicant] = useState(null);
@@ -85,7 +84,7 @@ const EmployerDashboard = () => {
           p: 4,
           overflow: 'auto',
         }}>
-          {selectedApplicant && <UserProfile user={selectedApplicant} />}
+          {selectedApplicant && <UserProfile user={selectedApplicant} onClose={handleCloseProfileModal}/>}
         </Box>
       </Modal>
 

@@ -20,7 +20,6 @@ const Home = () => {
   
     const handleSearch = () => {
       console.log('Searching for:', jobTitle, 'in', location);
-      // Implement actual search functionality here
     };
 
     const featuredCompanies = [

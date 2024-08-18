@@ -15,8 +15,6 @@ export const AuthProvider = ({ children }) => {
 
   const login = async (email, password, userType) => {
     try {
-      // Implement your actual login API call here
-      // This is a mock implementation
       const response = await mockLoginAPI(email, password, userType);
       
       const loggedInUser = {
@@ -56,7 +54,7 @@ export const useAuth = () => {
   return useContext(AuthContext);
 };
 
-// Mock login API function (replace with actual API call in production)
+// Mock login
 const mockLoginAPI = (email, password, userType) => {
   return new Promise((resolve, reject) => {
     setTimeout(() => {

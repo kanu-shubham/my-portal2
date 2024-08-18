@@ -1,7 +1,6 @@
 
 
 export const fetchUserData = async () => {
-    // Simulate API delay
     await new Promise(resolve => setTimeout(resolve, 1000));
   
     // Mock user data

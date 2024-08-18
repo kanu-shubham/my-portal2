@@ -37,7 +37,6 @@ const JobListings = () => {
 
   const handleQuickApply = (jobId) => {
     console.log(`Applied to job ${jobId}`);
-    // Implement quick apply logic here
   };
 
   if (isError) {
@@ -51,7 +50,7 @@ const JobListings = () => {
   return (
     <Container maxWidth="lg" sx={{ mt: 4, height: 'calc(100vh - 100px)', display: 'flex', flexDirection: 'column' }}>
       <Typography variant="h1" component="h1" gutterBottom sx={{ fontSize: '2.5rem', mb: 3 }}>
-        Front End Developer Jobs
+        Jobs Listings
       </Typography>
       
       <Grid container spacing={3} sx={{ flexGrow: 1, overflow: 'hidden' }}>

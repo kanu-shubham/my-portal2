@@ -1,5 +1,3 @@
-// src/hooks/useUserData.js
-
 import { useState, useEffect } from 'react';
 import { fetchUserData } from '../../services/userService';
 

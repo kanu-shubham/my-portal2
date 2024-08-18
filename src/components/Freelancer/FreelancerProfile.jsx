@@ -1,7 +1,7 @@
 import React from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { TextField, Button, Chip, Box, Typography, CircularProgress, Alert } from '@mui/material';
-import { useGitHubRepos } from '../../hooks/data/useGitHubRepos';
+import  {useGithubRepos}  from '../../hooks/data/useGithubRepos';
 
 const FreelancerProfile = ({ user, onUpdate }) => {
   const { control, handleSubmit, watch } = useForm({
@@ -14,7 +14,7 @@ const FreelancerProfile = ({ user, onUpdate }) => {
   });
 
   const githubUsername = watch('githubUsername');
-  const { repos, loading, error } = useGitHubRepos(githubUsername);
+  const { repos, loading, error } = useGithubRepos(githubUsername);
 
   const onSubmit = (data) => {
     onUpdate({ ...data, repos });

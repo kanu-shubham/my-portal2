@@ -1,28 +1,23 @@
-import { useState, useEffect } from 'react';
+import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
 
-export const useGitHubRepos = (username) => {
-  const [repos, setRepos] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
+// Function to fetch GitHub repositories
+const fetchGithubRepos = async (username) => {
+  if (!username) throw new Error('Username is required');
+  const { data } = await axios.get(`https://api.github.com/users/${username}/repos`);
+  return data;
+};
 
-  useEffect(() => {
-    const fetchRepos = async () => {
-      if (!username) return;
-      setLoading(true);
-      setError(null);
-      try {
-        const response = await axios.get(`https://api.github.com/users/${username}/repos`);
-        setRepos(response.data);
-      } catch (err) {
-        setError('Failed to fetch GitHub repositories');
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchRepos();
-  }, [username]);
-
-  return { repos, loading, error };
+// Custom hook to use GitHub repositories query
+export const useGithubRepos = (username) => {
+  return useQuery({
+    queryKey: ['githubRepos', username],
+    queryFn: () => fetchGithubRepos(username),
+    enabled: !!username,
+    staleTime: 5 * 60 * 1000, // 5 minutes
+    cacheTime: 60 * 60 * 1000, // 1 hour
+    onError: (error) => {
+      console.error('Error fetching GitHub repos:', error);
+    },
+  });
 };

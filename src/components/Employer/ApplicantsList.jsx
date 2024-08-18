@@ -8,7 +8,7 @@ const ApplicantsList = ({ open, jobId, onClose, onSelect }) => {
 
   useEffect(() => {
     if (open && jobId) {
-      // Mock API call
+  
       const mockApplicants = Array.from({ length: 5 }, (_, i) => ({
         id: i + 1,
         name: `Applicant ${i + 1}`,

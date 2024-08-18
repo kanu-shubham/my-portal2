@@ -1,25 +1,12 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { List, ListItem, ListItemIcon, ListItemText } from '@mui/material';
 import { GitHub as GitHubIcon } from '@mui/icons-material';
-import axios from 'axios';
 
 const GitHubRepos = ({ username }) => {
-  const [repos, setRepos] = useState([]);
+  const { isLoading, isError, data: repos, error } = useGithubRepos(username);
 
-  useEffect(() => {
-    const fetchRepos = async () => {
-      if (username) {
-        try {
-          const response = await axios.get(`https://api.github.com/users/${username}/repos`);
-          setRepos(response.data);
-        } catch (error) {
-          console.error('Error fetching GitHub repos:', error);
-        }
-      }
-    };
-
-    fetchRepos();
-  }, [username]);
+  if (isLoading) return <div>Loading...</div>;
+  if (isError) return <div>Error: {error.message}</div>;
 
   return (
     <List>

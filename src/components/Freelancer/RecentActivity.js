@@ -13,8 +13,7 @@ const RecentActivity = () => {
     const fetchRecentActivities = async () => {
       setLoading(true);
       try {
-        // Replace this with your actual API call
-        await new Promise(resolve => setTimeout(resolve, 1000)); // Simulating API delay
+        await new Promise(resolve => setTimeout(resolve, 1000));
         const mockActivities = [
           { type: 'application', description: 'Applied for Frontend Developer position', date: '2023-07-20' },
           { type: 'profile', description: 'Updated your profile', date: '2023-07-18' },

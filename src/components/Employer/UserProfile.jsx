@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { 
   Container, 
   Typography, 
@@ -13,16 +13,15 @@ import {
   CircularProgress
 } from '@mui/material';
 
-const UserProfile = () => {
+const UserProfile = ({onClose}) => {
   const { id } = useParams();
-  const navigate = useNavigate();
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchUserProfile = async () => {
       setLoading(true);
-      // Mock API call - replace with actual API call in production
+     
       await new Promise(resolve => setTimeout(resolve, 1000));
       const mockUser = {
         id,
@@ -113,7 +112,7 @@ const UserProfile = () => {
 
         <Button 
           variant="contained" 
-          onClick={() => navigate(-1)} 
+          onClick={onClose} 
           sx={{ mt: 3 }}
           aria-label="Go back to page"
         >

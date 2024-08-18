@@ -1,6 +1,6 @@
 import { createTheme } from '@mui/material/styles';
 
-// Define common properties for both light and dark themes
+// Common properties for both light and dark themes
 const commonProperties = {
   typography: {
     fontFamily: '"Roboto", "Helvetica", "Arial", sans-serif',
