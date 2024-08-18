@@ -7,6 +7,8 @@ import FreelancerDashboard from './pages/FreelancerDashboard';
 import EmployerDashboard from './pages/EmployerDashboard';
 import UserProfile from './components/Employer/UserProfile';
 import { useAuth } from './hooks/useAuth';
+import JobListings from './components/Freelancer/JobListings';
+import FreelancerProfile from './components/Freelancer/FreelancerProfile';
 
 // Protected Route component
 const ProtectedRoute = ({ children, allowedRoles }) => {
@@ -67,6 +69,24 @@ const ProtectedRoute = ({ children, allowedRoles }) => {
             </ProtectedRoute>
           } 
         />
+
+      <Route 
+          path="/job-listings" 
+          element={
+            <ProtectedRoute allowedRoles={['freelancer']}>
+               <JobListings />
+            </ProtectedRoute>
+          } 
+        />
+
+       <Route 
+          path="/user-profile" 
+          element={
+            <ProtectedRoute allowedRoles={['freelancer']}>
+               <FreelancerProfile />
+            </ProtectedRoute>
+          } 
+        />  
      
        <Route 
           path="/user-profile/:id" 

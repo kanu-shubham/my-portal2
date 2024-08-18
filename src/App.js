@@ -5,9 +5,11 @@ import { CssBaseline } from '@mui/material';
 import { SnackbarProvider } from 'notistack';
 import { AuthProvider } from './hooks/useAuth';
 import AppContent from './AppContent';
+import ReactQueryProvider from './context/ReactQueryProvider';
 
 const App = () => {
   return (
+    <ReactQueryProvider>
     <Router>
     <ThemeProvider>
       <CssBaseline />
@@ -18,6 +20,7 @@ const App = () => {
       </SnackbarProvider>
     </ThemeProvider>
   </Router>
+  </ReactQueryProvider>
   );
 };
 

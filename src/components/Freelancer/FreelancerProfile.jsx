@@ -3,7 +3,7 @@ import { useForm, Controller } from 'react-hook-form';
 import { TextField, Button, Chip, Box, Typography, CircularProgress, Alert } from '@mui/material';
 import { useGitHubRepos } from '../../hooks/data/useGitHubRepos';
 
-const UserProfile = ({ user, onUpdate }) => {
+const FreelancerProfile = ({ user, onUpdate }) => {
   const { control, handleSubmit, watch } = useForm({
     defaultValues: {
       name: user?.name || '',
@@ -114,4 +114,4 @@ const UserProfile = ({ user, onUpdate }) => {
   );
 };
 
-export default UserProfile;
+export default FreelancerProfile;

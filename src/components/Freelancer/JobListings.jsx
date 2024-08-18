@@ -1,97 +1,87 @@
-import React, { useRef, useCallback } from 'react';
-import { TextField, Button, Card, CardContent, Typography, Box, Chip, CircularProgress } from '@mui/material';
-import { useForm, Controller } from 'react-hook-form';
+import React, { useState, useRef, useCallback } from 'react';
+import { 
+  Container, 
+  Typography, 
+  Grid, 
+  CircularProgress, 
+  Alert,
+  Box
+} from '@mui/material';
 import { useJobs } from '../../hooks/data/useJobs';
+import JobFilters from './JobFilters';
+import JobCard from './JobCard';
 
-const JobListing = () => {
-  const { jobs, loading, hasMore, fetchJobs, applyFilters } = useJobs();
-  const { control, handleSubmit } = useForm();
+const JobListings = () => {
+  const [filters, setFilters] = useState({ skills: [], minSalary: 0, location: null });
+  const { 
+    data, 
+    isLoading, 
+    isError, 
+    error, 
+    fetchNextPage, 
+    hasNextPage, 
+    isFetchingNextPage 
+  } = useJobs(filters);
+
   const observer = useRef();
-
   const lastJobElementRef = useCallback(node => {
-    if (loading) return;
+    if (isLoading || isFetchingNextPage) return;
     if (observer.current) observer.current.disconnect();
     observer.current = new IntersectionObserver(entries => {
-      if (entries[0].isIntersecting && hasMore) {
-        fetchJobs();
+      if (entries[0].isIntersecting && hasNextPage) {
+        fetchNextPage();
       }
     });
     if (node) observer.current.observe(node);
-  }, [loading, hasMore, fetchJobs]);
-
-  const onSubmit = (data) => {
-    applyFilters(data);
-  };
+  }, [isLoading, isFetchingNextPage, hasNextPage, fetchNextPage]);
 
   const handleQuickApply = (jobId) => {
-    // In a real app, you'd send an API request to apply for the job
     console.log(`Applied to job ${jobId}`);
+    // Implement quick apply logic here
   };
 
-  return (
-    <Box>
-      <form onSubmit={handleSubmit(onSubmit)} aria-label="Job Filter Form">
-        <Controller
-          name="skills"
-          control={control}
-          defaultValue=""
-          render={({ field }) => (
-            <TextField
-              {...field}
-              label="Filter by Skills"
-              fullWidth
-              margin="normal"
-              helperText="Enter skills separated by commas"
-            />
-          )}
-        />
-        <Controller
-          name="minSalary"
-          control={control}
-          defaultValue=""
-          render={({ field }) => (
-            <TextField
-              {...field}
-              label="Minimum Salary per Hour"
-              type="number"
-              fullWidth
-              margin="normal"
-            />
-          )}
-        />
-        <Button type="submit" variant="contained" color="primary" sx={{ mt: 2, mb: 2 }}>
-          Filter Jobs
-        </Button>
-      </form>
+  if (isError) {
+    return (
+      <Container sx={{ mt: 4 }}>
+        <Alert severity="error">{error.message}</Alert>
+      </Container>
+    );
+  }
 
-      <Box role="list" aria-label="Job Listings">
-        {jobs.map((job, index) => (
-          <Card key={job.id} sx={{ mb: 2 }} ref={jobs.length === index + 1 ? lastJobElementRef : null}>
-            <CardContent>
-              <Typography variant="h6">{job.title}</Typography>
-              <Typography variant="subtitle1">{job.company}</Typography>
-              <Typography variant="body1">Salary: ${job.salary}/hour</Typography>
-              <Box mt={1} mb={1}>
-                {job.skills.map((skill, index) => (
-                  <Chip key={index} label={skill} sx={{ mr: 1 }} />
-                ))}
-              </Box>
-              <Button 
-                variant="contained" 
-                color="secondary" 
-                onClick={() => handleQuickApply(job.id)}
-                aria-label={`Quick Apply for ${job.title} at ${job.company}`}
-              >
-                Quick Apply
-              </Button>
-            </CardContent>
-          </Card>
-        ))}
-      </Box>
-      {loading && <CircularProgress aria-label="Loading more jobs" />}
-      {!hasMore && <Typography aria-live="polite">No more jobs to load</Typography>}
-    </Box>
+  return (
+    <Container maxWidth="lg" sx={{ mt: 4 }}>
+      <Typography variant="h4" gutterBottom>Job Postings</Typography>
+      
+      <Grid container spacing={3}>
+        <Grid item xs={12} md={3}>
+          <JobFilters filters={filters} setFilters={setFilters} />
+        </Grid>
+        <Grid item xs={12} md={9}>
+          {data?.pages.map((page, i) => (
+            <React.Fragment key={i}>
+              {page.jobs.map((job, index) => (
+                <Box ref={page.jobs.length === index + 1 ? lastJobElementRef : null} key={job.id}>
+                  <JobCard job={job} onQuickApply={handleQuickApply} />
+                </Box>
+              ))}
+            </React.Fragment>
+          ))}
+          
+          {(isLoading || isFetchingNextPage) && (
+            <Box sx={{ display: 'flex', justifyContent: 'center', mt: 4 }}>
+              <CircularProgress />
+            </Box>
+          )}
+          
+          {!hasNextPage && data && (
+            <Typography align="center" sx={{ mt: 4 }}>
+              No more jobs to load.
+            </Typography>
+          )}
+        </Grid>
+      </Grid>
+    </Container>
   );
 };
 
-export default JobListing;
+export default JobListings;
