@@ -1,14 +1,12 @@
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
 
-// Function to fetch GitHub repositories
 const fetchGithubRepos = async (username) => {
   if (!username) throw new Error('Username is required');
   const { data } = await axios.get(`https://api.github.com/users/${username}/repos`);
   return data;
 };
 
-// Custom hook to use GitHub repositories query
 export const useGithubRepos = (username) => {
   return useQuery({
     queryKey: ['githubRepos', username],

@@ -1,10 +1,13 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { TextField, Button, Chip, Box, Typography, CircularProgress, Alert } from '@mui/material';
 import { useGithubRepos } from '../../hooks/data/useGithubRepos';
 import './FreelancerProfile.css';
 
 const FreelancerProfile = ({ user, onUpdate }) => {
+  const [githubUsername, setGithubUsername] = useState(user?.githubUsername || '');
+  const { data: repos, isLoading, isError, error } = useGithubRepos(githubUsername);
+
   const { control, handleSubmit, watch } = useForm({
     defaultValues: {
       name: user?.name || '',
@@ -14,12 +17,19 @@ const FreelancerProfile = ({ user, onUpdate }) => {
     }
   });
 
-  const githubUsername = watch('githubUsername');
-  const { repos, loading, error } = useGithubRepos(githubUsername);
+  console.log(repos);
 
   const onSubmit = (data) => {
     onUpdate({ ...data, repos });
   };
+
+  const handleGithubUsernameBlur = (event, onChange) => {
+    const newUsername = event.target.value.trim();
+    console.log('Setting GitHub username:', newUsername);
+    setGithubUsername(newUsername);
+    onChange(newUsername);
+  };
+
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="freelancer-profile-form" aria-label="User Profile Form">
@@ -93,12 +103,13 @@ const FreelancerProfile = ({ user, onUpdate }) => {
             label="GitHub Username"
             fullWidth
             margin="normal"
+            onBlur={(event) => handleGithubUsernameBlur(event, field.onChange)}
           />
         )}
       />
-      {loading && <CircularProgress className="loading-spinner" aria-label="Loading GitHub repositories" />}
-      {error && <Alert severity="error" className="error-message">{error}</Alert>}
-      {repos.length > 0 && (
+      {isLoading && <CircularProgress className="loading-spinner" aria-label="Loading GitHub repositories" />}
+      {isError && <Alert severity="error" className="error-message">{error.message}</Alert>}
+      {repos && repos.length > 0 && (
         <Box className="github-repos">
           <Typography variant="subtitle1">GitHub Repositories:</Typography>
           <ul className="repo-list" aria-label="GitHub Repositories">
@@ -108,8 +119,17 @@ const FreelancerProfile = ({ user, onUpdate }) => {
           </ul>
         </Box>
       )}
-      <Button type="submit" variant="contained" color="primary" className="submit-button">
-        Update Profile
+      {repos && repos.length === 0 && githubUsername && !isLoading && !isError && (
+        <Typography variant="body2">No repositories found for this username.</Typography>
+      )}
+      <Button 
+        type="submit" 
+        variant="contained" 
+        color="primary" 
+        className="submit-button"
+        disabled={isLoading}
+      >
+        {isLoading ? 'Loading...' : 'Update Profile'}
       </Button>
     </form>
   );
