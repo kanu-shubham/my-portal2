@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useForm, Controller } from 'react-hook-form';
+import { useCreateJob } from '../../hooks/data/useCreateJob';
 import { 
   TextField, 
   Button, 
@@ -15,18 +16,31 @@ import {
 
 const CreateJobPosting = ({ onJobCreated, onClose }) => {
   const { control, handleSubmit, reset, formState: { errors } } = useForm();
+  const [jobData, setJobData] = useState(null);
+  const { isLoading, isError, error, isSuccess, data } = useCreateJob(jobData);
   const [tags, setTags] = useState([]);
 
   const onSubmit = (data) => {
     const jobData = { ...data, tags };
+    setJobData(jobData);
     onJobCreated(jobData);
-    reset();
-    setTags([]);
   };
 
   const handleTagsChange = (event, newTags) => {
     setTags(newTags);
   };
+
+  useEffect(() => {
+    if (isSuccess) {
+      reset();
+      setTags([]);
+      setTimeout(() => {
+        onClose();
+      }, 2000);
+    }
+    if (isError) {
+    }
+  }, [isSuccess, isError, error, reset, onClose]);
 
   return (
     <Paper elevation={3} sx={{ p: 3 }}>
@@ -226,7 +240,7 @@ const CreateJobPosting = ({ onJobCreated, onClose }) => {
             fullWidth
             aria-describedby="submit-job-posting"
           >
-            Post Job
+             {isLoading ? 'Posting...' : 'Post Job'}
           </Button>
           <Button
             type="button"
