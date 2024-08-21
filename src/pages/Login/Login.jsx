@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../hooks/useAuth';
+import { useAuth } from '../../hooks/useAuth';
 import {
   Container,
   Typography,
@@ -14,6 +14,7 @@ import {
   Box,
   Alert
 } from '@mui/material';
+import './Login.css';
 
 const Login = () => {
   const { login } = useAuth();
@@ -42,11 +43,11 @@ const Login = () => {
 
   return (
     <Container component="main" maxWidth="xs">
-      <Paper elevation={3} sx={{ mt: 8, p: 4, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+      <Paper elevation={3} className="login-container">
         <Typography component="h1" variant="h5">
           Sign in
         </Typography>
-        <Box component="form" onSubmit={handleSubmit(onSubmit)} sx={{ mt: 1 }}>
+        <Box component="form" onSubmit={handleSubmit(onSubmit)} className="login-form">
           <Controller
             name="email"
             control={control}
@@ -89,18 +90,18 @@ const Login = () => {
             name="userType"
             control={control}
             render={({ field }) => (
-              <RadioGroup {...field} row sx={{ justifyContent: 'center', mt: 2 }}>
+              <RadioGroup {...field} row className="user-type-radio">
                 <FormControlLabel value="freelancer" control={<Radio />} label="Freelancer" />
                 <FormControlLabel value="employer" control={<Radio />} label="Employer" />
               </RadioGroup>
             )}
           />
-          {error && <Alert severity="error" sx={{ mt: 2 }}>{error}</Alert>}
+          {error && <Alert severity="error" className="error-alert">{error}</Alert>}
           <Button
             type="submit"
             fullWidth
             variant="contained"
-            sx={{ mt: 3, mb: 2 }}
+            className="submit-button"
           >
             Sign In
           </Button>

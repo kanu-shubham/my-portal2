@@ -13,6 +13,7 @@ import {
     Paper
   } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
+import './Home.css';
 
 const Home = () => {
     const [jobTitle, setJobTitle] = useState('');
@@ -41,10 +42,10 @@ const Home = () => {
     ];
 
     return (
-      <Box sx={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
+      <Box className="full-height">
         <Box 
           component="section" 
-          sx={{ bgcolor: 'primary.main', color: 'white', py: 8 }}
+          className="hero-section"
           aria-labelledby="hero-title"
         >
           <Container maxWidth="lg">
@@ -56,14 +57,15 @@ const Home = () => {
             </Typography>
             <Paper
               component="form"
-              sx={{ p: 2, display: 'flex', alignItems: 'center', mt: 4 }}
+              className="search-form"
               onSubmit={(e) => { e.preventDefault(); handleSearch(); }}
+              role="search" 
             >
               <Autocomplete
                 freeSolo
                 options={['Software Engineer', 'Data Analyst', 'Product Manager']}
                 renderInput={(params) => <TextField {...params} label="Job Title, Skills, or Company" variant="outlined" fullWidth />}
-                sx={{ flexGrow: 1, mr: 2 }}
+                className="search-input"
                 onChange={(event, newValue) => {
                   setJobTitle(newValue);
                 }}
@@ -73,7 +75,7 @@ const Home = () => {
                 freeSolo
                 options={['New York', 'San Francisco', 'London', 'Berlin']}
                 renderInput={(params) => <TextField {...params} label="Location" variant="outlined" fullWidth />}
-                sx={{ flexGrow: 1, mr: 2 }}
+                className="search-input"
                 onChange={(event, newValue) => {
                   setLocation(newValue);
                 }}
@@ -92,8 +94,8 @@ const Home = () => {
             </Paper>
           </Container>
         </Box>
-        <Container component="main" sx={{ mt: 8, mb: 2 }} maxWidth="lg">
-          <Grid container spacing={4} sx={{ mt: 4 }} aria-label="Key features of Freelancer Platform">
+        <Container component="main" className="main-content" maxWidth="lg">
+          <Grid container spacing={4} className="features-grid" aria-label="Key features of Freelancer Platform">
             <Grid item xs={12} md={4}>
               <Card>
                 <CardContent>
@@ -134,7 +136,7 @@ const Home = () => {
         </Container>
 
         <Box component="section" aria-labelledby="featured-companies-title">
-          <Container maxWidth="lg" sx={{ my: 8 }}>
+          <Container maxWidth="lg" className="featured-companies">
             <Typography variant="h2" id="featured-companies-title" gutterBottom>
               Featured Companies
             </Typography>
@@ -160,7 +162,7 @@ const Home = () => {
           </Container>
         </Box>
 
-        <Box component="section" sx={{ bgcolor: 'grey.100', py: 8 }} aria-labelledby="top-categories-title">
+        <Box component="section" className="top-categories" aria-labelledby="top-categories-title">
           <Container maxWidth="lg">
             <Typography variant="h2" id="top-categories-title" gutterBottom>
               Top Job Categories

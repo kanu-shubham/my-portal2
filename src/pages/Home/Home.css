@@ -1,0 +1,44 @@
+.hero-section {
+    background-color: var(--primary-main);
+    color: white;
+    padding-top: 64px;
+    padding-bottom: 64px;
+  }
+  
+  .search-form {
+    padding: 16px;
+    display: flex;
+    align-items: center;
+    margin-top: 32px;
+  }
+  
+  .search-input {
+    flex-grow: 1;
+    margin-right: 16px;
+  }
+  
+  .main-content {
+    margin-top: 64px;
+    margin-bottom: 16px;
+  }
+  
+  .features-grid {
+    margin-top: 32px;
+  }
+  
+  .featured-companies {
+    margin-top: 64px;
+    margin-bottom: 64px;
+  }
+  
+  .top-categories {
+    background-color: var(--grey-100);
+    padding-top: 64px;
+    padding-bottom: 64px;
+  }
+  
+  .full-height {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+  }
