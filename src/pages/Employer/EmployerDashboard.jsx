@@ -6,6 +6,7 @@ import CreateJobPosting from '../../components/Employer/CreateJobPosting';
 import ViewJobPostings from '../../components/Employer/ViewJobPostings';
 import UserProfile from '../../components/Employer/UserProfile';
 import './EmployerDashboard.css';
+import { JobProvider } from '../../context/JobContext';
 
 const EmployerDashboard = () => {
   const { user } = useAuth();
@@ -45,6 +46,7 @@ const EmployerDashboard = () => {
 
   return (
     <main>
+      <JobProvider>
       <Container maxWidth="lg" className="dashboard-container">
         <Grid container spacing={3}>
           <Grid item xs={12}>
@@ -97,6 +99,7 @@ const EmployerDashboard = () => {
           </div>
         </Modal>
       </Container>
+      </JobProvider>
     </main>
   );
 };

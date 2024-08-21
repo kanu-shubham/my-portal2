@@ -66,8 +66,8 @@ const JobListings = () => {
           >
             {data?.pages.map((page, i) => (
               <React.Fragment key={i}>
-                {page.jobs.map((job, index) => (
-                  <Box ref={page.jobs.length === index + 1 ? lastJobElementRef : null} key={job.id}>
+                {page?.jobs?.map((job, index) => (
+                  <Box ref={page?.jobs?.length === index + 1 ? lastJobElementRef : null} key={job.id}>
                     <JobCard job={job} onQuickApply={handleQuickApply} />
                   </Box>
                 ))}

@@ -2,10 +2,12 @@ import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { Container, Typography, Box, CircularProgress } from '@mui/material';
 import JobCard from './JobCard';
 import ApplicantsList from './ApplicantsList';
-import useGetJobListings from '../../hooks/data/useGetJobListings';
+import useJobListings from '../../hooks/data/useGetJobListings';
+import { useJobContext } from '../../context/JobContext';
 
 const ViewJobPostings = ({ handleAppClick }) => {
-  const { jobs, isLoading, hasMore, fetchJobs, loadingAnnouncement } = useGetJobListings();
+  const { jobs } = useJobContext();
+  const { isLoading, hasMore, fetchJobs, loadingAnnouncement } = useJobListings();
   const [selectedJobId, setSelectedJobId] = useState(null);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const observerTarget = useRef(null);
@@ -51,16 +53,17 @@ const ViewJobPostings = ({ handleAppClick }) => {
         ref={loadingAnnouncement} 
         className="visually-hidden"
       ></div>
-      {jobs.length > 0 ? (
+      {jobs?.length > 0 ? (
         <ul 
           aria-labelledby="job-listings-title" 
           className="job-list"
         >
-          {jobs.map((job, index) => (
-            <li key={job.id} ref={index === jobs.length - 1 ? lastJobElementRef : null}>
+          {jobs?.map((job, index) => (
+            <li key={job.id} ref={index === jobs?.length - 1 ? lastJobElementRef : null}>
               <JobCard 
                 job={job} 
                 onApplicantClick={handleApplicantClick}
+                employerView={true}
               />
             </li>
           ))}
@@ -75,7 +78,7 @@ const ViewJobPostings = ({ handleAppClick }) => {
           <CircularProgress aria-label="Loading jobs" />
         </Box>
       )}
-      {!hasMore && jobs.length > 0 && (
+      {!hasMore && jobs?.length > 0 && (
         <Typography 
           variant="body1" 
           textAlign="center" 

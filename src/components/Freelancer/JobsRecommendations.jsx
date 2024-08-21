@@ -42,7 +42,7 @@ const JobRecommendations = ({ jobs, onViewJob, onViewAllJobs }) => {
                 View Job
               </Button>
             </ListItem>
-            {index < jobs.length - 1 && <Divider component="li" />}
+            {index < jobs?.length - 1 && <Divider component="li" />}
           </React.Fragment>
         ))}
       </List>

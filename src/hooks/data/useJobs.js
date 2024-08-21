@@ -23,7 +23,7 @@ const fetchJobs = async ({ pageParam = 1, queryKey }) => {
   }));
 
   // Apply filters
-  const filteredJobs = jobs.filter(job => {
+  const filteredJobs = jobs?.filter(job => {
     if (filters.skills && filters.skills.length > 0) {
       if (!filters.skills.some(skill => job.skills.includes(skill))) {
         return false;

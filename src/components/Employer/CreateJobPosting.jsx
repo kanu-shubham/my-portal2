@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { useCreateJob } from '../../hooks/data/useCreateJob';
+import ConditionalRender  from '../../components/common/ConditionalRender';
 import { 
   TextField, 
   Button, 
@@ -16,11 +17,18 @@ import {
 } from '@mui/material';
 
 const CreateJobPosting = ({ onJobCreated, onClose }) => {
+  
   const { control, handleSubmit, reset, formState: { errors } } = useForm();
   const [tags, setTags] = useState([]);
   const createJobMutation = useCreateJob();
+
   const onSubmit = (data) => {
-    const jobData = { ...data, tags };
+    const jobData = { 
+      ...data, 
+      tags,
+      id: Date.now(), // Generate a temporary ID
+      applicants: 0 // Initialize applicants count
+    };
     createJobMutation.mutate(jobData, {
       onSuccess: (createdJob) => {
         onJobCreated(createdJob);
@@ -31,6 +39,8 @@ const CreateJobPosting = ({ onJobCreated, onClose }) => {
         }, 2000);
       },
       onError: (error) => {
+        console.error('Error creating job:', error);
+        // Handle error (e.g., show an error message to the user)
       },
     });
   };
@@ -236,32 +246,30 @@ const CreateJobPosting = ({ onJobCreated, onClose }) => {
         </FormControl>
 
         <Box display="flex" justifyContent="space-between" gap={2}>
-          <Button
-            type="submit"
-            variant="contained"
-            color="primary"
-            disabled={createJobMutation.isLoading}
-            fullWidth
-            aria-describedby="submit-job-posting"
-          >
-              {createJobMutation.isLoading ? (
-              <CircularProgress size={24} color="inherit" />
-            ) : (
-              'Post Job'
-            )}
-          </Button>
-          <Button
-            type="button"
-            variant="outlined"
-            color="secondary"
-            disabled={createJobMutation.isLoading}
-            onClick={onClose}
-            fullWidth
-            aria-describedby="close-job-posting"
-          >
-            Close
-          </Button>
-        </Box>
+            <Button
+              type="submit"
+              variant="contained"
+              color="primary"
+              disabled={createJobMutation.isLoading}
+              fullWidth
+              aria-describedby="submit-job-posting"
+            >
+              <ConditionalRender when={createJobMutation.isLoading} fallback="Post Job">
+                <CircularProgress size={24} color="inherit" />
+              </ConditionalRender>
+            </Button>
+            <Button
+              type="button"
+              variant="outlined"
+              color="secondary"
+              disabled={createJobMutation.isLoading}
+              onClick={onClose}
+              fullWidth
+              aria-describedby="close-job-posting"
+            >
+              Close
+            </Button>
+          </Box>
         <FormHelperText id="submit-job-posting">
           Submit the job posting form
         </FormHelperText>

@@ -1,7 +1,8 @@
 import { useState, useCallback, useRef, useEffect } from 'react';
+import { useJobContext } from '../../context/JobContext';
 
 const useJobListings = () => {
-  const [jobs, setJobs] = useState([]);
+  const { jobs, addJobs } = useJobContext();
   const [isLoading, setIsLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true);
   const [page, setPage] = useState(1);
@@ -15,7 +16,7 @@ const useJobListings = () => {
       // Simulating API call
       await new Promise(resolve => setTimeout(resolve, 1000));
       const newJobs = Array.from({ length: 10 }, (_, i) => ({
-        id: jobs.length + i + 1,
+        id: Date.now() + i, // Ensure unique IDs
         title: `Job Title ${jobs.length + i + 1}`,
         description: `This is the job description for Job ${jobs.length + i + 1}. It can be up to 16KB in length.`,
         requirements: `Requirements for Job ${jobs.length + i + 1}`,
@@ -25,7 +26,7 @@ const useJobListings = () => {
         applicants: Math.floor(Math.random() * 50) + 1
       }));
 
-      setJobs(prevJobs => [...prevJobs, ...newJobs]);
+      addJobs(newJobs);
       setPage(prevPage => prevPage + 1);
       if (page > 5) setHasMore(false);
 
@@ -38,12 +39,14 @@ const useJobListings = () => {
     } finally {
       setIsLoading(false);
     }
-  }, [jobs.length, page, isLoading, hasMore]);
+  }, [jobs.length, page, isLoading, hasMore, addJobs]);
 
   // Add this useEffect to trigger initial fetch
   useEffect(() => {
-    fetchJobs();
-  }, [fetchJobs]);
+    if (jobs?.length === 0) {
+      fetchJobs();
+    }
+  }, [fetchJobs, jobs.length]);
 
   return { jobs, isLoading, hasMore, fetchJobs, loadingAnnouncement };
 };
