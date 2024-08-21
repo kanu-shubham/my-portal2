@@ -1,0 +1,18 @@
+  
+  .job-listings-title {
+    margin-bottom: 16px;
+  }
+  
+  .job-list {
+    list-style-type: none;
+    padding: 0;
+  }
+  
+  .job-list-item {
+    margin-bottom: 16px;
+  }
+  
+  .no-jobs-message {
+    text-align: center;
+    margin-top: 16px
+  }

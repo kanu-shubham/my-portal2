@@ -1,11 +1,11 @@
 import React from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import NotFound from './components/common/NotFound';
-import Home from './pages/Home';
-import Login from './pages/Login';
-import FreelancerDashboard from './pages/FreelancerDashboard';
-import EmployerDashboard from './pages/EmployerDashboard';
-import UserProfile from './components/Employer/UserProfile';
+import Home from './pages/Home/Home';
+import Login from './pages/Login/Login';
+import FreelancerDashboard from './pages/Freelancer/FreelancerDashboard';
+import EmployerDashboard from './pages/Employer/EmployerDashboard';
+import UserProfile from './components/Employer/EmployerProfile/UserProfile';
 import { useAuth } from './hooks/useAuth';
 import JobListings from './components/Freelancer/JobListings';
 import FreelancerProfile from './components/Freelancer/FreelancerProfile';

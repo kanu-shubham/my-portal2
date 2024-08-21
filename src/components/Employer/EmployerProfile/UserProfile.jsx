@@ -12,7 +12,7 @@ import {
   Button,
   CircularProgress
 } from '@mui/material';
-import useUserProfile from '../../hooks/data/useUserProfile';
+import useUserProfile from '../../../hooks/data/useUserProfile';
 
 const UserProfile = ({ onClose }) => {
   const { id } = useParams();

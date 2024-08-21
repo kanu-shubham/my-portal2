@@ -1,12 +1,11 @@
 import React, { useState } from 'react';
-import { useAuth } from '../../hooks/useAuth';
+import { useAuth } from '../hooks/useAuth';
 import { Container, Typography, Grid, Paper, Box, Button, Modal } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
-import CreateJobPosting from '../../components/Employer/NewJobPost/CreateJobPosting';
-import ViewJobPostings from '../../components/Employer/JobsPostings/ViewJobPostings';
-import UserProfile from '../../components/Employer/EmployerProfile/UserProfile';
+import CreateJobPosting from '../components/Employer/NewJobPost/CreateJobPosting';
+import ViewJobPostings from '../components/Employer/JobsPostings/ViewJobPostings';
+import UserProfile from '../components/Employer/EmployerProfile/UserProfile';
 import './EmployerDashboard.css';
-import { JobProvider } from '../../context/JobContext';
 
 const EmployerDashboard = () => {
   const { user } = useAuth();
@@ -46,7 +45,6 @@ const EmployerDashboard = () => {
 
   return (
     <main>
-      <JobProvider>
       <Container maxWidth="lg" className="dashboard-container">
         <Grid container spacing={3}>
           <Grid item xs={12}>
@@ -99,7 +97,6 @@ const EmployerDashboard = () => {
           </div>
         </Modal>
       </Container>
-      </JobProvider>
     </main>
   );
 };

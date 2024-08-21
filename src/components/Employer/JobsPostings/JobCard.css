@@ -1,0 +1,45 @@
+.job-card {
+    margin-bottom: 16px;
+  }
+  
+  .job-title {
+    margin-bottom: 8px;
+  }
+  
+  .company-name {
+    color: rgba(0, 0, 0, 0.6);
+    margin-bottom: 8px;
+  }
+  
+  .job-description {
+    margin-bottom: 16px;
+  }
+  
+  .job-requirements {
+    margin-bottom: 16px;
+  }
+  
+  .skills-container {
+    margin-bottom: 16px;
+  }
+  
+  .skill-chip {
+    margin-right: 8px;
+    margin-bottom: 8px;
+  }
+  
+  .contact-info {
+    margin-bottom: 16px;
+  }
+  
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
+  }
