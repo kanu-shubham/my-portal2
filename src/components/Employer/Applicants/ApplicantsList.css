@@ -19,3 +19,12 @@
   .applicant-email {
     color: rgba(0, 0, 0, 0.6);
   }
+
+  .matching-percentage {
+    font-weight: bold;
+    color: #4caf50;
+  }
+  
+  .matching-progress {
+    margin-top: 8px;
+  }

@@ -1,15 +1,32 @@
 import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react';
-import { Drawer, List, ListItem, ListItemText, Typography, IconButton, Box } from '@mui/material';
+import { Drawer, List, ListItem, ListItemText, Typography, IconButton, Box, LinearProgress } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import './ApplicantsList.css';
 
 const ApplicantItem = React.memo(({ applicant, onSelect }) => (
   <ListItem button onClick={() => onSelect(applicant.id)}>
     <ListItemText 
-      primary={<span className="applicant-name">{applicant.name}</span>}
-      secondary={<span className="applicant-email">{applicant.email}</span>}
-      primaryTypographyProps={{ "aria-label": "Applicant name" }}
-      secondaryTypographyProps={{ "aria-label": "Applicant email" }}
+      primary={
+        <Box display="flex" justifyContent="space-between" alignItems="center">
+          <span className="applicant-name">{applicant.name}</span>
+          <Typography variant="body2" className="matching-percentage">
+            {applicant.matchingPercentage}% match
+          </Typography>
+        </Box>
+      }
+      secondary={
+        <Box>
+          <span className="applicant-email">{applicant.email}</span>
+          <LinearProgress 
+            variant="determinate" 
+            value={applicant.matchingPercentage} 
+            className="matching-progress"
+            aria-label={`Skills match: ${applicant.matchingPercentage}%`}
+          />
+        </Box>
+      }
+      primaryTypographyProps={{ "aria-label": "Applicant name and matching percentage" }}
+      secondaryTypographyProps={{ "aria-label": "Applicant email and skills match visualization" }}
     />
   </ListItem>
 ));
@@ -19,11 +36,12 @@ const ApplicantsList = React.memo(({ open, jobId, onClose, onSelect }) => {
   const closeButtonRef = useRef(null);
 
   const fetchApplicants = useCallback(() => {
-    // Simulating API call to fetch applicants
+    // Simulating API call to fetch applicants with matching percentages
     const mockApplicants = Array.from({ length: 5 }, (_, i) => ({
       id: i + 1,
       name: `Applicant ${i + 1}`,
-      email: `applicant${i + 1}@example.com`
+      email: `applicant${i + 1}@example.com`,
+      matchingPercentage: Math.floor(Math.random() * 101) // Random percentage between 0 and 100
     }));
     setApplicants(mockApplicants);
   }, []);

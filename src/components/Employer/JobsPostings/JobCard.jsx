@@ -1,5 +1,6 @@
 import React, { useMemo } from 'react';
 import { Card, CardContent, Typography, Chip, Button, Box } from '@mui/material';
+import { formatDistanceToNow } from 'date-fns';
 import './JobCard.css';
 
 const JobCard = React.memo(({ job = {}, onApplicantClick, employerView }) => {
@@ -11,7 +12,8 @@ const JobCard = React.memo(({ job = {}, onApplicantClick, employerView }) => {
     requirements = 'No requirements specified',
     tags = [],
     contactInfo = 'No contact information provided',
-    applicants = 0
+    applicants = 0,
+    postedAt = new Date() // Default to current date if not provided
   } = job;
 
   const truncatedDescription = useMemo(() => {
@@ -35,6 +37,10 @@ const JobCard = React.memo(({ job = {}, onApplicantClick, employerView }) => {
     return `View ${applicants} applicant${applicants !== 1 ? 's' : ''} for ${title}`;
   }, [applicants, title]);
 
+  const formattedPostedTime = useMemo(() => {
+    return formatDistanceToNow(new Date(postedAt), { addSuffix: true });
+  }, [postedAt]);
+
   if (!job || Object.keys(job).length === 0) {
     return null; // or return a placeholder component
   }
@@ -56,6 +62,9 @@ const JobCard = React.memo(({ job = {}, onApplicantClick, employerView }) => {
         </Typography>
         <Typography variant="body2" className="company-name">
           <span className="sr-only">Company:</span> {companyName}
+        </Typography>
+        <Typography variant="body2" className="posted-time">
+          <span className="sr-only">Posted:</span> {formattedPostedTime}
         </Typography>
         <Typography variant="body1" className="job-description">
           {truncatedDescription}
