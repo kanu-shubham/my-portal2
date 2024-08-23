@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { TextField, Button, Chip, Box } from '@mui/material';
-import { useGithubRepos } from '../../hooks/data/useGithubRepos';
-import GitHubRepos from './GitHubRepos';
+import { useGithubRepos } from '../../../hooks/data/useGithubRepos';
+import GitHubRepos from '../GithubRepos/GitHubRepos';
 import './FreelancerProfile.css';
 
 const FreelancerProfile = ({ user, onUpdate }) => {

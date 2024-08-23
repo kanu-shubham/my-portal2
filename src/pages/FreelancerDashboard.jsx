@@ -1,11 +1,11 @@
 import React from 'react';
 import { Container, Grid, Typography, Paper, CircularProgress, Alert } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
-import ProfileSection from '../../components/Freelancer/FreelancerProfile/ProfileSection';
-import JobRecommendations from '../../components/Freelancer/JobRecommendations/JobsRecommendations';
-import PendingActions from '../../components/Freelancer/PendingActions';
-import RecentActivity from '../../components/Freelancer/RecentActivity/RecentActivity';
-import useUserData from '../../hooks/data/useUserData';
+import ProfileSection from '../components/Freelancer/FreelancerProfile/ProfileSection';
+import JobRecommendations from '../components/Freelancer/JobsRecommendations';
+import PendingActions from '../components/Freelancer/PendingActions';
+import RecentActivity from '../components/Freelancer/RecentActivity/RecentActivity';
+import useUserData from '../hooks/data/useUserData';
 import './FreelancerDashboard.css';
 
 const FreelancerDashboard = () => {

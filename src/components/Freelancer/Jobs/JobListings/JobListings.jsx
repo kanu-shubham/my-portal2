@@ -7,9 +7,9 @@ import {
   Alert,
   Box
 } from '@mui/material';
-import { useJobs } from '../../hooks/data/useJobs';
-import JobFilters from './JobFilters';
-import JobCard from './JobCard';
+import { useJobs } from '../../../../hooks/data/useJobs';
+import JobFilters from '../JobFilters/JobFilters';
+import JobCard from '../JobCard/JobCard';
 import './JobListings.css'; // Import the CSS file
 
 const JobListings = () => {

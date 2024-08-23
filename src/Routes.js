@@ -1,37 +1,43 @@
-import React from 'react';
+import React, { lazy, Suspense } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
-import NotFound from './components/common/NotFound';
-import Home from './pages/Home/Home';
-import Login from './pages/Login/Login';
-import FreelancerDashboard from './pages/Freelancer/FreelancerDashboard';
-import EmployerDashboard from './pages/Employer/EmployerDashboard';
-import UserProfile from './components/Employer/EmployerProfile/UserProfile';
 import { useAuth } from './hooks/useAuth';
-import JobListings from './components/Freelancer/JobListings';
-import FreelancerProfile from './components/Freelancer/FreelancerProfile';
+
+// Lazy load components
+const NotFound = lazy(() => import('./components/common/NotFound'));
+const Home = lazy(() => import('./pages/Home/Home'));
+const Login = lazy(() => import('./pages/Login/Login'));
+const FreelancerDashboard = lazy(() => import('./pages/Freelancer/FreelancerDashboard'));
+const EmployerDashboard = lazy(() => import('./pages/Employer/EmployerDashboard'));
+const UserProfile = lazy(() => import('./components/Employer/EmployerProfile/UserProfile'));
+const JobListings = lazy(() => import('./components/Freelancer/Jobs/JobListings/JobListings'));
+const FreelancerProfile = lazy(() => import('./components/Freelancer/FreelancerProfile/FreelancerProfile'));
+
+// Loading component
+const Loading = () => <div>Loading...</div>;
 
 // Protected Route component
 const ProtectedRoute = ({ children, allowedRoles }) => {
-    const { user, isAuthenticated } = useAuth();
-  
-    if (!isAuthenticated) {
-      return <Navigate to="/login" replace />;
-    }
-  
-    if (allowedRoles && !allowedRoles.includes(user.userType)) {
-      return <Navigate to="/" replace />;
-    }
-  
-    return children;
-  };
-  
-  const AppRoutes = () => {
-    return (
+  const { user, isAuthenticated } = useAuth();
+
+  if (!isAuthenticated) {
+    return <Navigate to="/login" replace />;
+  }
+
+  if (allowedRoles && !allowedRoles.includes(user.userType)) {
+    return <Navigate to="/" replace />;
+  }
+
+  return children;
+};
+
+const AppRoutes = () => {
+  return (
+    <Suspense fallback={<Loading />}>
       <Routes>
         {/* Public routes */}
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
-  
+
         {/* Protected routes for all authenticated users */}
         <Route 
           path="/profile" 
@@ -41,7 +47,7 @@ const ProtectedRoute = ({ children, allowedRoles }) => {
             </ProtectedRoute>
           } 
         />
-  
+
         {/* Protected routes for freelancers */}
         <Route 
           path="/freelancer-dashboard" 
@@ -51,7 +57,7 @@ const ProtectedRoute = ({ children, allowedRoles }) => {
             </ProtectedRoute>
           } 
         />
-  
+
         {/* Protected routes for employers */}
         <Route 
           path="/employer-dashboard" 
@@ -65,42 +71,43 @@ const ProtectedRoute = ({ children, allowedRoles }) => {
           path="/post-job" 
           element={
             <ProtectedRoute allowedRoles={['employer']}>
-               {/* <PostJob /> */}
+              {/* <PostJob /> */}
             </ProtectedRoute>
           } 
         />
 
-      <Route 
+        <Route 
           path="/job-listings" 
           element={
             <ProtectedRoute allowedRoles={['freelancer']}>
-               <JobListings />
+              <JobListings />
             </ProtectedRoute>
           } 
         />
 
-       <Route 
+        <Route 
           path="/user-profile" 
           element={
             <ProtectedRoute allowedRoles={['freelancer']}>
-               <FreelancerProfile />
+              <FreelancerProfile />
             </ProtectedRoute>
           } 
         />  
      
-       <Route 
+        <Route 
           path="/user-profile/:id" 
           element={
             <ProtectedRoute allowedRoles={['employer']}>
-               <UserProfile/>
+              <UserProfile />
             </ProtectedRoute>
           } 
         />
-  
+
         {/* Catch-all route for 404 Not Found */}
         <Route path="*" element={<NotFound />} />
       </Routes>
-    );
-  };  
+    </Suspense>
+  );
+};
 
 export default AppRoutes;
