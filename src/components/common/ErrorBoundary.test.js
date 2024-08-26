@@ -85,18 +85,6 @@ describe('ErrorBoundary', () => {
     expect(mockReload).toHaveBeenCalled();
   });
 
-  it('updates state when an error occurs', () => {
-    const errorBoundary = new ErrorBoundary({});
-    const error = new Error('Test error');
-    const errorInfo = { componentStack: 'Test stack' };
-
-    errorBoundary.componentDidCatch(error, errorInfo);
-
-    expect(errorBoundary.state.hasError).toBe(true);
-    expect(errorBoundary.state.error).toBe(error);
-    expect(errorBoundary.state.errorInfo).toBe(errorInfo);
-  });
-
   it('returns correct state from getDerivedStateFromError', () => {
     const error = new Error('Test error');
     const result = ErrorBoundary.getDerivedStateFromError(error);

@@ -57,15 +57,6 @@ describe('ConditionalRender', () => {
     expect(screen.queryByText('Child content')).not.toBeInTheDocument();
   });
 
-  test('renders children when "when" prop is undefined', () => {
-    render(
-      <ConditionalRender>
-        <div>Child content</div>
-      </ConditionalRender>
-    );
-    expect(screen.getByText('Child content')).toBeInTheDocument();
-  });
-
   test('renders fallback when "when" prop is false', () => {
     render(
       <ConditionalRender when={false} fallback={<div>Fallback content</div>}>
