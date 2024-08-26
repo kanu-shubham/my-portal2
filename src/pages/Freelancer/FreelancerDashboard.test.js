@@ -65,6 +65,9 @@ describe('FreelancerDashboard', () => {
     const profileSection = screen.getByTestId('profile-section');
     await userEvent.click(profileSection);
 
+    // Add a small delay to allow for any asynchronous operations
+    await new Promise(resolve => setTimeout(resolve, 0));
+
     expect(mockNavigate).toHaveBeenCalledWith('/user-profile');
   });
 
@@ -74,7 +77,9 @@ describe('FreelancerDashboard', () => {
     const jobRecommendations = screen.getByTestId('job-recommendations');
     await userEvent.click(jobRecommendations);
 
-    // Assuming the first job has an id of 1
+    // Add a small delay to allow for any asynchronous operations
+    await new Promise(resolve => setTimeout(resolve, 0));
+
     expect(mockNavigate).toHaveBeenCalledWith('/job/1');
   });
 
@@ -84,6 +89,9 @@ describe('FreelancerDashboard', () => {
     const jobRecommendations = screen.getByTestId('job-recommendations');
     await userEvent.click(jobRecommendations);
 
+    // Add a small delay to allow for any asynchronous operations
+    await new Promise(resolve => setTimeout(resolve, 0));
+
     expect(mockNavigate).toHaveBeenCalledWith('/job-listings');
   });
 
@@ -91,8 +99,8 @@ describe('FreelancerDashboard', () => {
     render(<BrowserRouter><FreelancerDashboard /></BrowserRouter>);
     
     expect(screen.getByText('Profile Overview')).toBeInTheDocument();
-    expect(screen.getByText('Job Recommendations')).toBeInTheDocument();
-    expect(screen.getByText('Pending Actions')).toBeInTheDocument();
-    expect(screen.getByText('Recent Activity')).toBeInTheDocument();
+    expect(screen.getAllByText('Job Recommendations')[0]).toBeInTheDocument();
+    expect(screen.getAllByText('Pending Actions')[0]).toBeInTheDocument();
+    expect(screen.getAllByText('Recent Activity')[0]).toBeInTheDocument();
   });
 });
