@@ -1,6 +1,6 @@
 import React from 'react';
 import { Typography, List, ListItem, ListItemText, Button, Divider, Box } from '@mui/material';
-import './JobRecommendations.css'; // Import the CSS file
+import './JobsRecommendations.css';
 
 const JobRecommendations = ({ jobs, onViewJob, onViewAllJobs }) => {
   return (
