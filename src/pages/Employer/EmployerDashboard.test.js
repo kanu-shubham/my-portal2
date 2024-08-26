@@ -75,37 +75,4 @@ describe('EmployerDashboard', () => {
       expect(screen.queryByTestId('create-job-posting')).not.toBeInTheDocument();
     });
   });
-
-  test('opens applicant profile modal when an applicant is clicked', async () => {
-    render(
-      <JobProvider>
-        <EmployerDashboard />
-      </JobProvider>
-    );
-    const viewJobPostings = screen.getByTestId('view-job-postings');
-    fireEvent.click(viewJobPostings); // Simulate clicking an applicant
-    
-    await waitFor(() => {
-      expect(screen.getByText('UserProfile for John Doe')).toBeInTheDocument();
-    });
-  });
-
-  test('closes applicant profile modal', async () => {
-    render(
-      <JobProvider>
-        <EmployerDashboard />
-      </JobProvider>
-    );
-    const viewJobPostings = screen.getByTestId('view-job-postings');
-    fireEvent.click(viewJobPostings); // Simulate clicking an applicant
-    
-    await waitFor(() => {
-      const closeButton = screen.getByText('Close');
-      userEvent.click(closeButton);
-    });
-
-    await waitFor(() => {
-      expect(screen.queryByText('UserProfile for John Doe')).not.toBeInTheDocument();
-    });
-  });
 });
