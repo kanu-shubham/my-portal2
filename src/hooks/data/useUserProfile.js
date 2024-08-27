@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 
-const useUserProfile = (id) => {
+const useUserProfile = (applicantId) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -10,12 +10,12 @@ const useUserProfile = (id) => {
       setLoading(true);
       setError(null);
       try {
-        // Simulate API call
+        // Simulate API call to get applicant information
         await new Promise(resolve => setTimeout(resolve, 1000));
         const mockUser = {
-          id,
-          name: `Applicant ${id}`,
-          email: `applicant${id}@example.com`,
+          id: applicantId,
+          name: `Applicant ${applicantId}`,
+          email: `applicant${applicantId}@example.com`,
           skills: ['JavaScript', 'React', 'Node.js', 'Python'],
           projects: [
             { name: 'E-commerce Platform', description: 'Built a full-stack e-commerce platform' },
@@ -26,14 +26,16 @@ const useUserProfile = (id) => {
         };
         setUser(mockUser);
       } catch (err) {
-        setError('Failed to fetch user profile');
+        setError('Failed to fetch applicant profile');
       } finally {
         setLoading(false);
       }
     };
 
-    fetchUserProfile();
-  }, [id]);
+    if (applicantId) {
+      fetchUserProfile();
+    }
+  }, [applicantId]);
 
   return { user, loading, error };
 };

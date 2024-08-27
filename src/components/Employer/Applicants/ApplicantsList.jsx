@@ -75,7 +75,7 @@ const ApplicantsList = React.memo(({ open, jobId, onClose, onSelect }) => {
 
   const applicantsList = useMemo(() => (
     <List className="applicants-list" aria-label="List of applicants">
-      {applicants.map((applicant, index) => (
+       {applicants.map((applicant, index) => (
         <ApplicantItem 
           key={applicant.id} 
           applicant={applicant} 

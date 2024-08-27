@@ -14,9 +14,8 @@ import {
 } from '@mui/material';
 import useUserProfile from '../../../hooks/data/useUserProfile';
 
-const UserProfile = ({ onClose }) => {
-  const { id } = useParams();
-  const { user, loading, error } = useUserProfile(id);
+const UserProfile = ({ applicantId, onClose  }) => {
+  const { user, loading, error } = useUserProfile(applicantId);
 
   if (loading) {
     return (

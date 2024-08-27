@@ -1,87 +1,111 @@
 import React from 'react';
-import { render, screen, waitFor } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
+import { render, act, renderHook, waitFor } from '@testing-library/react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { useCreateJob } from './useCreateJob';
 import { useJobContext } from '../../context/JobContext';
 
-// Mock the JobContext
 jest.mock('../../context/JobContext', () => ({
   useJobContext: jest.fn(),
 }));
-
-// Test component that uses the hook
-function TestComponent() {
-  const createJobMutation = useCreateJob();
-  
-  const handleCreateJob = () => {
-    createJobMutation.mutate({ title: 'Software Engineer', company: 'TechCorp' });
-  };
-
-  return (
-    <div>
-      <button onClick={handleCreateJob}>Create Job</button>
-      {createJobMutation.isLoading && <div>Loading...</div>}
-      {createJobMutation.isSuccess && <div>Job created successfully</div>}
-      {createJobMutation.isError && <div>Error: {createJobMutation.error.message}</div>}
-    </div>
-  );
-}
 
 describe('useCreateJob', () => {
   let queryClient;
   let addJobMock;
 
   beforeEach(() => {
-    queryClient = new QueryClient();
+    queryClient = new QueryClient({
+      defaultOptions: {
+        queries: {
+          retry: false,
+        },
+        mutations: {
+          retry: false,
+        },
+      },
+    });
+    jest.useFakeTimers();
     addJobMock = jest.fn();
     useJobContext.mockReturnValue({ addJob: addJobMock });
-
-    // Mock Date.now() to return a consistent value
-    jest.spyOn(Date, 'now').mockImplementation(() => 1234567890);
   });
 
   afterEach(() => {
+    jest.useRealTimers();
     jest.clearAllMocks();
   });
 
-  it('should create a new job and add it to the context', async () => {
-    render(
-      <QueryClientProvider client={queryClient}>
-        <TestComponent />
-      </QueryClientProvider>
-    );
+  const wrapper = ({ children }) => (
+    <QueryClientProvider client={queryClient}>
+      {children}
+    </QueryClientProvider>
+  );
 
-    userEvent.click(screen.getByText('Create Job'));
+  it('should create a new job', async () => {
+    const { result } = renderHook(() => useCreateJob(), { wrapper });
+    const jobData = { title: 'Test Job', description: 'Test Description' };
 
-    await waitFor(() => {
-      expect(screen.getByText('Job created successfully')).toBeInTheDocument();
+    act(() => {
+      result.current.mutate(jobData);
     });
 
-    expect(addJobMock).toHaveBeenCalledWith({
-      title: 'Software Engineer',
-      company: 'TechCorp',
-      id: 1234567890,
-      applicants: 6,
+    await waitFor(() => expect(result.current.isLoading).toBe(true));
+
+    act(() => {
+      jest.advanceTimersByTime(1000);
     });
+
+    await waitFor(() => expect(result.current.isSuccess).toBe(true));
+
+    expect(result.current.data).toEqual(expect.objectContaining({
+      ...jobData,
+      id: expect.any(Number),
+      applicants: 6
+    }));
+
+    expect(addJobMock).toHaveBeenCalledWith(expect.objectContaining({
+      ...jobData,
+      id: expect.any(Number),
+      applicants: 6
+    }));
   });
 
-  it('should handle errors', async () => {
-    // Mock a failure in addJob
-    addJobMock.mockImplementation(() => {
-      throw new Error('Failed to add job');
+  it('should handle mutation errors', async () => {
+    const errorMessage = 'Failed to add job';
+    addJobMock.mockImplementation(() => { throw new Error(errorMessage); });
+
+    const { result } = renderHook(() => useCreateJob(), { wrapper });
+    const jobData = { title: 'Test Job', description: 'Test Description' };
+
+    act(() => {
+      result.current.mutate(jobData);
     });
 
-    render(
-      <QueryClientProvider client={queryClient}>
-        <TestComponent />
-      </QueryClientProvider>
-    );
-
-    userEvent.click(screen.getByText('Create Job'));
-
-    await waitFor(() => {
-      expect(screen.getByText('Error: Failed to add job')).toBeInTheDocument();
+    act(() => {
+      jest.advanceTimersByTime(1000);
     });
+
+    await waitFor(() => expect(result.current.isError).toBe(true));
+    expect(result.current.error).toEqual(new Error(errorMessage));
+  });
+
+  it('should reset mutation state after successful job creation', async () => {
+    const { result } = renderHook(() => useCreateJob(), { wrapper });
+    const jobData = { title: 'Test Job', description: 'Test Description' };
+
+    act(() => {
+      result.current.mutate(jobData);
+    });
+
+    act(() => {
+      jest.advanceTimersByTime(1000);
+    });
+
+    await waitFor(() => expect(result.current.isSuccess).toBe(true));
+
+    act(() => {
+      result.current.reset();
+    });
+
+    expect(result.current.isSuccess).toBe(false);
+    expect(result.current.data).toBeUndefined();
   });
 });

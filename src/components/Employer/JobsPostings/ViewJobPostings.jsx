@@ -55,6 +55,12 @@ const ViewJobPostings = React.memo(({ employerView = true, handleAppClick }) => 
     setIsDrawerOpen(false);
   }, []);
 
+  const handleSelectApplicant = useCallback((applicantId) => {
+    handleAppClick(applicantId);
+    setIsDrawerOpen(false);
+  }, [handleAppClick]);
+
+
   const title = useMemo(() => 
     employerView ? "Your Job Postings" : "Available Jobs",
   [employerView]);
@@ -106,10 +112,10 @@ const ViewJobPostings = React.memo(({ employerView = true, handleAppClick }) => 
       {!hasMore && jobs.length > 0 && noMoreJobsMessage}
       {employerView && (
         <ApplicantsList 
-          open={isDrawerOpen}
-          onClose={handleCloseDrawer}
-          jobId={selectedJobId}
-          onSelect={handleAppClick}
+        open={isDrawerOpen}
+        onClose={handleCloseDrawer}
+        jobId={selectedJobId}
+        onSelect={handleSelectApplicant}
         />
       )}
     </Container>
