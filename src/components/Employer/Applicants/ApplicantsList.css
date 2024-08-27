@@ -1,30 +1,113 @@
+/* Drawer Styles */
 .applicants-drawer {
-    width: 250px;
-  }
-  
-  .applicants-header {
-    display: flex;
-    align-items: center;
-    padding: 16px;
-  }
-  
-  .applicants-title {
-    flex-grow: 1;
-  }
-  
-  .applicant-name {
-    font-weight: bold;
-  }
-  
-  .applicant-email {
-    color: rgba(0, 0, 0, 0.6);
-  }
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 30%;
+  min-width: 300px;
+  max-width: 400px;
+}
 
-  .matching-percentage {
-    font-weight: bold;
-    color: #4caf50;
+/* Header Styles */
+.applicants-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.applicants-title {
+  font-size: 1.25rem;
+  font-weight: 500;
+}
+
+/* List Styles */
+.applicants-list {
+  flex-grow: 1;
+  overflow-y: auto;
+  padding: 0;
+}
+
+/* List Item Styles */
+.MuiListItem-root {
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.MuiListItem-root:last-child {
+  border-bottom: none;
+}
+
+.applicant-name {
+  font-weight: 500;
+}
+
+.applicant-email {
+  color: #666;
+  font-size: 0.9em;
+}
+
+.matching-percentage {
+  font-weight: 500;
+  color: #1976d2;
+}
+
+.matching-progress {
+  margin-top: 8px;
+}
+
+/* Sentinel Element */
+.sentinel {
+  height: 20px;
+}
+
+/* Loading Indicator */
+.loading-indicator {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: rgba(255, 255, 255, 0.9);
+  padding: 16px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 16px;
+}
+
+/* Error and No Applicants Messages */
+.error-message,
+.no-applicants-message {
+  padding: 16px;
+  text-align: center;
+}
+
+.error-message {
+  color: #d32f2f;
+}
+
+/* Scrollbar Styles */
+.applicants-list::-webkit-scrollbar {
+  width: 8px;
+}
+
+.applicants-list::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+.applicants-list::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 4px;
+}
+
+.applicants-list::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+/* Responsive Styles */
+@media (max-width: 600px) {
+  .applicants-drawer {
+    width: 100%;
+    max-width: none;
   }
-  
-  .matching-progress {
-    margin-top: 8px;
-  }
+}

@@ -1,75 +1,100 @@
 import React from 'react';
-import { render, screen, waitFor, within } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
+import { render, screen, waitFor, fireEvent } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import ApplicantsList from './ApplicantsList';
+import useGetApplicants from '../../../hooks/data/useGetApplicants';
+
+// Mock the custom hook
+jest.mock('../../../hooks/data/useGetApplicants');
+
+const mockApplicants = [
+  { id: 1, name: 'John Doe', email: 'john@example.com', matchingPercentage: 80 },
+  { id: 2, name: 'Jane Smith', email: 'jane@example.com', matchingPercentage: 90 },
+];
 
 describe('ApplicantsList', () => {
   const mockOnClose = jest.fn();
   const mockOnSelect = jest.fn();
 
   beforeEach(() => {
-    jest.useFakeTimers();
-  });
-
-  afterEach(() => {
-    jest.useRealTimers();
-    jest.clearAllMocks();
-  });
-
-  test('renders closed drawer when open prop is false', () => {
-    render(<ApplicantsList open={false} jobId={1} onClose={mockOnClose} onSelect={mockOnSelect} />);
-    expect(screen.queryByRole('region', { name: /job applicants list/i })).not.toBeInTheDocument();
-  });
-
-  test('renders open drawer with applicants when open prop is true', async () => {
-    render(<ApplicantsList open={true} jobId={1} onClose={mockOnClose} onSelect={mockOnSelect} />);
-    
-    await waitFor(() => {
-      expect(screen.getByRole('region', { name: /job applicants list/i })).toBeInTheDocument();
+    useGetApplicants.mockReturnValue({
+      applicants: mockApplicants,
+      loading: false,
+      error: null,
+      hasMore: false,
+      fetchApplicants: jest.fn(),
     });
+  });
+
+  it('renders the component with applicants', async () => {
+    render(<ApplicantsList open={true} jobId="123" onClose={mockOnClose} onSelect={mockOnSelect} />);
 
     expect(screen.getByText('Applicants')).toBeInTheDocument();
-    expect(screen.getAllByRole('button')).toHaveLength(6); // 5 applicants + 1 close button
+    expect(screen.getByText('John Doe')).toBeInTheDocument();
+    expect(screen.getByText('Jane Smith')).toBeInTheDocument();
   });
 
-  test('calls onClose when close button is clicked', async () => {
-    const user = userEvent.setup({ advanceTimers: jest.advanceTimersByTime });
-    render(<ApplicantsList open={true} jobId={1} onClose={mockOnClose} onSelect={mockOnSelect} />);
-    
-    await waitFor(() => {
-      expect(screen.getByRole('button', { name: /close applicants drawer/i })).toBeInTheDocument();
+  it('shows loading indicator when loading', async () => {
+    useGetApplicants.mockReturnValue({
+      applicants: [],
+      loading: true,
+      error: null,
+      hasMore: true,
+      fetchApplicants: jest.fn(),
     });
 
-    const closeButton = screen.getByRole('button', { name: /close applicants drawer/i });
-    await user.click(closeButton);
-    
-    expect(mockOnClose).toHaveBeenCalledTimes(1);
+    render(<ApplicantsList open={true} jobId="123" onClose={mockOnClose} onSelect={mockOnSelect} />);
+
+    expect(screen.getByText('Loading applicants...')).toBeInTheDocument();
   });
 
-  test('calls onSelect with correct applicant id when an applicant is clicked', async () => {
-    const user = userEvent.setup({ advanceTimers: jest.advanceTimersByTime });
-    render(<ApplicantsList open={true} jobId={1} onClose={mockOnClose} onSelect={mockOnSelect} />);
-    
-    await waitFor(() => {
-      expect(screen.getAllByRole('button')).toHaveLength(6);
+  it('shows error message when there is an error', async () => {
+    useGetApplicants.mockReturnValue({
+      applicants: [],
+      loading: false,
+      error: 'Failed to fetch applicants',
+      hasMore: false,
+      fetchApplicants: jest.fn(),
     });
 
-    const applicantButtons = screen.getAllByRole('button').slice(1); // Exclude close button
-    await user.click(applicantButtons[0]);
-    
-    expect(mockOnSelect).toHaveBeenCalledWith(1); // Assuming the first applicant has id 1
+    render(<ApplicantsList open={true} jobId="123" onClose={mockOnClose} onSelect={mockOnSelect} />);
+
+    expect(screen.getByText('Failed to fetch applicants')).toBeInTheDocument();
   });
 
-  test('renders LinearProgress with correct aria-label', async () => {
-    render(<ApplicantsList open={true} jobId={1} onClose={mockOnClose} onSelect={mockOnSelect} />);
+  it('shows "No applicants found" message when there are no applicants', async () => {
+    useGetApplicants.mockReturnValue({
+      applicants: [],
+      loading: false,
+      error: null,
+      hasMore: false,
+      fetchApplicants: jest.fn(),
+    });
+
+    render(<ApplicantsList open={true} jobId="123" onClose={mockOnClose} onSelect={mockOnSelect} />);
+
+    expect(screen.getByText('No applicants found.')).toBeInTheDocument();
+  });
+
+  it('calls onSelect when an applicant is clicked', async () => {
+    render(<ApplicantsList open={true} jobId="123" onClose={mockOnClose} onSelect={mockOnSelect} />);
+
+    fireEvent.click(screen.getByText('John Doe'));
+    expect(mockOnSelect).toHaveBeenCalledWith(1);
+  });
+
+  it('calls onClose when close button is clicked', async () => {
+    render(<ApplicantsList open={true} jobId="123" onClose={mockOnClose} onSelect={mockOnSelect} />);
+
+    fireEvent.click(screen.getByLabelText('Close applicants list'));
+    expect(mockOnClose).toHaveBeenCalled();
+  });
+
+  it('is accessible', async () => {
+    const { container } = render(<ApplicantsList open={true} jobId="123" onClose={mockOnClose} onSelect={mockOnSelect} />);
     
     await waitFor(() => {
-      const progressBars = screen.getAllByRole('progressbar');
-      expect(progressBars).toHaveLength(5);
-      progressBars.forEach(bar => {
-        expect(bar).toHaveAttribute('aria-label', expect.stringMatching(/Skills match: \d+%/));
-      });
+      expect(container).toHaveNoViolations();
     });
   });
 });
