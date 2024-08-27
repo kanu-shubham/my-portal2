@@ -89,6 +89,7 @@ const ViewJobPostings = React.memo(({ employerView = true, handleAppClick }) => 
   ), []);
 
   return (
+    <Box className="view-job-postings-wrapper">
     <Container className="job-listings-container">
       <Typography variant="h5" component="h2" className="job-listings-title" id="job-listings-title">
         {title}
@@ -110,15 +111,16 @@ const ViewJobPostings = React.memo(({ employerView = true, handleAppClick }) => 
       ) : noJobsMessage}
       {isLoading && loadingSpinner}
       {!hasMore && jobs.length > 0 && noMoreJobsMessage}
-      {employerView && (
-        <ApplicantsList 
+    </Container>
+    {employerView && (
+      <ApplicantsList 
         open={isDrawerOpen}
         onClose={handleCloseDrawer}
         jobId={selectedJobId}
         onSelect={handleSelectApplicant}
-        />
-      )}
-    </Container>
+      />
+    )}
+  </Box>
   );
 });
 

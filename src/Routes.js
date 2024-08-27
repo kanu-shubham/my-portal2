@@ -1,6 +1,7 @@
 import React, { lazy, Suspense } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { useAuth } from './hooks/useAuth';
+import { AppliedJobsProvider } from './context/AppliedJobsContext';
 
 // Lazy load components
 const NotFound = lazy(() => import('./components/common/NotFound'));
@@ -80,7 +81,10 @@ const AppRoutes = () => {
           path="/job-listings" 
           element={
             <ProtectedRoute allowedRoles={['freelancer']}>
-              <JobListings />
+                    <AppliedJobsProvider>   
+                      <JobListings />
+                      </AppliedJobsProvider>
+           
             </ProtectedRoute>
           } 
         />

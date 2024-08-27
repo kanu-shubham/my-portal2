@@ -33,7 +33,7 @@ const Login = () => {
   const onSubmit = async (data) => {
     try {
       const user = await login(data.email, data.password, data.userType);
-      enqueueSnackbar('Login failed. Please try again.', { variant: 'success' });
+      enqueueSnackbar('Login Successful.', { variant: 'success' });
       if (user.userType === 'freelancer') {
         navigate('/freelancer-dashboard');
       } else if (user.userType === 'employer') {

@@ -14,7 +14,7 @@ import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import { timeAgo } from '../../../../utils/timeAgo';
 
-const JobCard = ({ job, onQuickApply }) => {
+const JobCard = ({ job, onQuickApply, isApplying }) => {
   return (
     <Card elevation={3} sx={{ mb: 3, '&:hover': { boxShadow: 6 } }}>
       <CardContent sx={{ p: 3 }}>
@@ -65,7 +65,7 @@ const JobCard = ({ job, onQuickApply }) => {
                 sx={{ flex: 1, mr: 1 }}
                 aria-label={`Quick apply for ${job.title} at ${job.company}`}
               >
-                Quick Apply
+                 {isApplying ? 'Applying...' : 'Quick Apply'}
               </Button>
               <Button 
                 variant="outlined" 

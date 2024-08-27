@@ -4,7 +4,7 @@ const JOBS_PER_PAGE = 20;
 
 // This function simulates an API call with pagination
 const fetchJobs = async ({ pageParam = 1, queryKey }) => {
-  const [_, filters] = queryKey;
+  const [_, filters, appliedJobs] = queryKey;
 
   await new Promise(resolve => setTimeout(resolve, 1000));
   
@@ -30,6 +30,11 @@ const fetchJobs = async ({ pageParam = 1, queryKey }) => {
 
   // Apply filters
   const filteredJobs = jobs?.filter(job => {
+    // Filter out applied jobs
+    if (appliedJobs.includes(job.id)) {
+      return false;
+    }
+
     if (filters.skills && filters.skills.length > 0) {
       if (!filters.skills.some(skill => job.skills.includes(skill))) {
         return false;
@@ -51,9 +56,9 @@ const fetchJobs = async ({ pageParam = 1, queryKey }) => {
   };
 };
 
-export const useJobs = (filters = {}) => {
+export const useJobs = (filters = {}, appliedJobs = []) => {
   return useInfiniteQuery({
-    queryKey: ['jobs', filters],
+    queryKey: ['jobs', filters, appliedJobs],
     queryFn: fetchJobs,
     getNextPageParam: (lastPage) => lastPage.hasMore ? lastPage.nextPage : undefined,
     staleTime: 5 * 60 * 1000, // 5 minutes

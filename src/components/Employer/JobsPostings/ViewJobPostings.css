@@ -1,18 +1,58 @@
-  
-  .job-listings-title {
-    margin-bottom: 16px;
+.view-job-postings-wrapper {
+  min-height: calc(100vh - 64px); /* Subtract header height if you have one */
+  display: flex;
+  flex-direction: column;
+  padding-bottom: 60px; /* Adjust based on your footer height */
+}
+
+.job-listings-container {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.job-listings-title {
+  margin-bottom: 20px;
+}
+
+.job-list {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+  overflow-y: auto;
+  flex-grow: 1;
+}
+
+.job-list-item {
+  margin-bottom: 20px;
+}
+
+.loading-spinner {
+  display: flex;
+  justify-content: center;
+  padding: 20px 0;
+}
+
+.no-jobs-message,
+.no-more-jobs-message {
+  text-align: center;
+  padding: 20px 0;
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+@media (max-width: 600px) {
+  .view-job-postings-wrapper {
+    padding-bottom: 40px; /* Adjust for smaller screens */
   }
-  
-  .job-list {
-    list-style-type: none;
-    padding: 0;
-  }
-  
-  .job-list-item {
-    margin-bottom: 16px;
-  }
-  
-  .no-jobs-message {
-    text-align: center;
-    margin-top: 16px
-  }
+}

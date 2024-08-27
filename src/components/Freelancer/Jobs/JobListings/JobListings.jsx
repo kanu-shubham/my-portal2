@@ -8,12 +8,16 @@ import {
   Box
 } from '@mui/material';
 import { useJobs } from '../../../../hooks/data/useJobs';
+import useApplyJob from '../../../../hooks/data/useApplyJob';
+import { useAppliedJobs } from '../../../../context/AppliedJobsContext';
 import JobFilters from '../JobFilters/JobFilters';
 import JobCard from '../JobCard/JobCard';
-import './JobListings.css'; // Import the CSS file
+import './JobListings.css';
 
 const JobListings = () => {
   const [filters, setFilters] = useState({ skills: [], minSalary: 0, location: null });
+  const appliedJobsContext = useAppliedJobs();
+  const { appliedJobs = [], addAppliedJob } = appliedJobsContext || {};
   const { 
     data, 
     isLoading, 
@@ -22,7 +26,8 @@ const JobListings = () => {
     fetchNextPage, 
     hasNextPage, 
     isFetchingNextPage 
-  } = useJobs(filters);
+  } = useJobs(filters, appliedJobs);
+  const { applyToJob, isApplying } = useApplyJob();
 
   const observer = useRef();
   const lastJobElementRef = useCallback(node => {
@@ -36,8 +41,11 @@ const JobListings = () => {
     if (node) observer.current.observe(node);
   }, [isLoading, isFetchingNextPage, hasNextPage, fetchNextPage]);
 
-  const handleQuickApply = (jobId) => {
-    console.log(`Applied to job ${jobId}`);
+  const handleQuickApply = async (jobId) => {
+    const success = await applyToJob(jobId);
+    if (success) {
+      addAppliedJob(jobId);
+    }
   };
 
   if (isError) {
@@ -66,9 +74,13 @@ const JobListings = () => {
           >
             {data?.pages.map((page, i) => (
               <React.Fragment key={i}>
-                {page?.jobs?.map((job, index) => (
+                {page?.jobs.map((job, index) => (
                   <Box ref={page?.jobs?.length === index + 1 ? lastJobElementRef : null} key={job.id}>
-                    <JobCard job={job} onQuickApply={handleQuickApply} />
+                    <JobCard 
+                      job={job} 
+                      onQuickApply={handleQuickApply} 
+                      isApplying={isApplying}
+                    />
                   </Box>
                 ))}
               </React.Fragment>
