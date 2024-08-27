@@ -11,6 +11,8 @@ import {
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import WorkIcon from '@mui/icons-material/Work';
 import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
+import AccessTimeIcon from '@mui/icons-material/AccessTime';
+import { timeAgo } from '../../../../utils/timeAgo';
 
 const JobCard = ({ job, onQuickApply }) => {
   return (
@@ -32,9 +34,15 @@ const JobCard = ({ job, onQuickApply }) => {
               <WorkIcon fontSize="small" sx={{ mr: 1 }} aria-hidden="true" />
               <Typography variant="body2">{job.experience} years</Typography>
             </Box>
-            <Box display="flex" alignItems="center" mb={2}>
+            <Box display="flex" alignItems="center" mb={1}>
               <AttachMoneyIcon fontSize="small" sx={{ mr: 1 }} aria-hidden="true" />
               <Typography variant="body2">${job.salary}/year</Typography>
+            </Box>
+            <Box display="flex" alignItems="center" mb={2}>
+              <AccessTimeIcon fontSize="small" sx={{ mr: 1 }} aria-hidden="true" />
+              <Typography variant="body2" aria-label={`Posted ${timeAgo(job.postedDate)}`}>
+                {timeAgo(job.postedDate)}
+              </Typography>
             </Box>
             <Box mb={2}>
               {job.skills.map((skill) => (

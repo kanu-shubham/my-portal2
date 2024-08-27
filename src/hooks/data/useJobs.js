@@ -1,4 +1,3 @@
-
 import { useInfiniteQuery } from '@tanstack/react-query';
 
 const JOBS_PER_PAGE = 20;
@@ -12,15 +11,22 @@ const fetchJobs = async ({ pageParam = 1, queryKey }) => {
   const startIndex = (pageParam - 1) * JOBS_PER_PAGE;
   const endIndex = startIndex + JOBS_PER_PAGE;
   
-  const jobs = Array.from({ length: JOBS_PER_PAGE }, (_, i) => ({
-    id: startIndex + i + 1,
-    title: `Front-end Developer ${startIndex + i + 1}`,
-    company: `Tech Company ${startIndex + i + 1}`,
-    location: ['New York', 'San Francisco', 'Remote'][Math.floor(Math.random() * 3)],
-    salary: (Math.floor(Math.random() * 50) + 50) * 1000,
-    experience: Math.floor(Math.random() * 10) + 1,
-    skills: ['JavaScript', 'React', 'CSS', 'HTML', 'Node.js'].sort(() => 0.5 - Math.random()).slice(0, 3),
-  }));
+  const jobs = Array.from({ length: JOBS_PER_PAGE }, (_, i) => {
+    const daysAgo = Math.floor(Math.random() * 30); // Random number of days ago (up to 30)
+    const postedDate = new Date();
+    postedDate.setDate(postedDate.getDate() - daysAgo);
+
+    return {
+      id: startIndex + i + 1,
+      title: `Front-end Developer ${startIndex + i + 1}`,
+      company: `Tech Company ${startIndex + i + 1}`,
+      location: ['New York', 'San Francisco', 'Remote'][Math.floor(Math.random() * 3)],
+      salary: (Math.floor(Math.random() * 50) + 50) * 1000,
+      experience: Math.floor(Math.random() * 10) + 1,
+      skills: ['JavaScript', 'React', 'CSS', 'HTML', 'Node.js'].sort(() => 0.5 - Math.random()).slice(0, 3),
+      postedDate: postedDate
+    };
+  });
 
   // Apply filters
   const filteredJobs = jobs?.filter(job => {

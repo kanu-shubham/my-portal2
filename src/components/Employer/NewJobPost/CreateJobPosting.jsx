@@ -1,5 +1,6 @@
 import React, { useState, useCallback, useMemo } from 'react';
 import { useForm, Controller } from 'react-hook-form';
+import { useSnackbar } from 'notistack';
 import { useCreateJob } from '../../../hooks/data/useCreateJob';
 import ConditionalRender from '../../common/ConditionalRender';
 import { 
@@ -20,6 +21,7 @@ const CreateJobPosting = React.memo(({ onJobCreated, onClose }) => {
   const { control, handleSubmit, reset, formState: { errors } } = useForm();
   const [tags, setTags] = useState([]);
   const createJobMutation = useCreateJob();
+  const { enqueueSnackbar } = useSnackbar();
 
   const onSubmit = useCallback((data) => {
     const jobData = { 
@@ -34,12 +36,13 @@ const CreateJobPosting = React.memo(({ onJobCreated, onClose }) => {
         reset();
         setTags([]);
         setTimeout(onClose, 2000);
+        enqueueSnackbar('Job created successfuly.', { variant: 'success' });
       },
       onError: (error) => {
-        console.error('Error creating job:', error);
+        enqueueSnackbar('Job creation failed. Please try again.', { variant: 'error' });
       },
     });
-  }, [tags, createJobMutation, onJobCreated, reset, onClose]);
+  }, [tags, createJobMutation, onJobCreated, reset, onClose, enqueueSnackbar]);
 
   const handleTagsChange = useCallback((event, newTags) => {
     setTags(newTags);

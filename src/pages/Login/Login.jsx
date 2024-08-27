@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../hooks/useAuth';
+import { useSnackbar } from 'notistack';
 import {
   Container,
   Typography,
@@ -20,6 +21,7 @@ const Login = () => {
   const { login } = useAuth();
   const navigate = useNavigate();
   const [error, setError] = useState('');
+  const { enqueueSnackbar } = useSnackbar();
   const { control, handleSubmit, formState: { errors } } = useForm({
     defaultValues: {
       email: '',
@@ -31,6 +33,7 @@ const Login = () => {
   const onSubmit = async (data) => {
     try {
       const user = await login(data.email, data.password, data.userType);
+      enqueueSnackbar('Login failed. Please try again.', { variant: 'success' });
       if (user.userType === 'freelancer') {
         navigate('/freelancer-dashboard');
       } else if (user.userType === 'employer') {
@@ -38,6 +41,7 @@ const Login = () => {
       }
     } catch (error) {
       setError('Login failed. Please check your credentials and try again.');
+      enqueueSnackbar('Login failed. Please try again.', { variant: 'error' });
     }
   };
 
