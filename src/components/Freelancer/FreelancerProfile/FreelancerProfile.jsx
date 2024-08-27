@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { useForm, Controller } from 'react-hook-form';
-import { TextField, Button, Chip, Box } from '@mui/material';
+import { TextField, Button } from '@mui/material';
 import { useGithubRepos } from '../../../hooks/data/useGithubRepos';
 import GitHubRepos from '../GithubRepos/GitHubRepos';
+import SkillsAutocomplete from './SkillsSection/SkillsAutocomplete';
 import './FreelancerProfile.css';
 
 const FreelancerProfile = ({ user, onUpdate }) => {
@@ -69,29 +70,7 @@ const FreelancerProfile = ({ user, onUpdate }) => {
           />
         )}
       />
-      <Controller
-        name="skills"
-        control={control}
-        render={({ field }) => (
-          <TextField
-            {...field}
-            label="Skills"
-            fullWidth
-            margin="normal"
-            helperText="Enter skills separated by commas"
-            onChange={(e) => {
-              const skillsArray = e.target.value.split(',').map(skill => skill.trim());
-              field.onChange(skillsArray);
-            }}
-            value={field.value.join(', ')}
-          />
-        )}
-      />
-      <Box className="skills-container" role="region" aria-label="Selected Skills">
-        {watch('skills').map((skill, index) => (
-          <Chip key={index} label={skill} className="skill-chip" />
-        ))}
-      </Box>
+      <SkillsAutocomplete control={control} watch={watch} />
       <Controller
         name="githubUsername"
         control={control}
