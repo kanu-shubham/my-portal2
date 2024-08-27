@@ -1,10 +1,21 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 import { AppBar, Toolbar, Typography, Button, Box } from '@mui/material';
 import { useAuth } from '../../hooks/useAuth';
 
 const Header = () => {
   const { user, logout, isAuthenticated } = useAuth();
+
+  useEffect(() => {
+    console.log('Authentication state changed:', isAuthenticated);
+  }, [isAuthenticated]);
+
+  const handleLogout = () => {
+    console.log('Logout clicked');
+    logout();
+  };
+
+  console.log('Rendering Header. isAuthenticated:', isAuthenticated, 'user:', user);
 
   return (
     <AppBar position="static">
@@ -23,7 +34,7 @@ const Header = () => {
               <Button color="inherit" component={RouterLink} to={user.userType === 'freelancer' ? '/freelancer-dashboard' : '/employer-dashboard'}>
                 Dashboard
               </Button>
-              <Button color="inherit" onClick={logout}>
+              <Button color="inherit" onClick={handleLogout}>
                 Logout
               </Button>
             </>
