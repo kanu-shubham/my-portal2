@@ -23,7 +23,7 @@ import './EmployerDashboard.css';
 import { JobProvider } from '../../context/JobContext';
 
 const EmployerDashboard = () => {
-  const { user, logout } = useAuth();
+  const { user } = useAuth();
   const [selectedApplicantId, setSelectedApplicantId] = useState(null);
   const [isCreateJobModalOpen, setIsCreateJobModalOpen] = useState(false);
   const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
